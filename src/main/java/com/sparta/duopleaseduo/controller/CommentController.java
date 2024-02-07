@@ -25,7 +25,7 @@ public class CommentController {
 //    }
     ///
     @PatchMapping("/comment/{commentId}")
-    public Long updateComment(@PathVariable(name = "commentId") Long id, CommentRequestDto requestDt) {
+    public CommentResponseDto updateComment(@PathVariable(name = "commentId") Long id, CommentRequestDto requestDt) {
         return service.updateComment(id,requestDt);
     }
     // deleting the item.

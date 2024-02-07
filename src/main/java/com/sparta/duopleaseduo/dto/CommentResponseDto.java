@@ -1,7 +1,11 @@
 package com.sparta.duopleaseduo.dto;
 
 import com.sparta.duopleaseduo.entity.Comment;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class CommentResponseDto {
 
     private Long id;
