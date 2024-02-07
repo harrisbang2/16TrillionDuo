@@ -1,9 +1,11 @@
-package com.sparta.duopleaseduo.service;
+package com.sparta.duopleaseduo;
 
 import com.sparta.duopleaseduo.dto.FeedListDto;
 import com.sparta.duopleaseduo.dto.UserFeedListDto;
+import com.sparta.duopleaseduo.entity.Comment;
 import com.sparta.duopleaseduo.entity.Feed;
 import com.sparta.duopleaseduo.entity.User;
+import com.sparta.duopleaseduo.repository.CommentRepository;
 import com.sparta.duopleaseduo.repository.FeedRepository;
 import com.sparta.duopleaseduo.repository.UserRepository;
 import org.junit.jupiter.api.Assertions;
@@ -18,12 +20,14 @@ import java.util.List;
 
 @SpringBootTest
 @Transactional
-class FeedServiceTest {
+class FeedTest {
 
     @Autowired
     FeedRepository feedRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    CommentRepository commentRepository;
 
     @Test
     @DisplayName("피드 추가")
@@ -117,11 +121,35 @@ class FeedServiceTest {
 
         List<FeedListDto> userFeeds = feedRepository.findAllByUser(user).stream().map(FeedListDto::new).toList();
 
-
-
         UserFeedListDto feedListDto = new UserFeedListDto(user.getUsername(), user.getIntroduce(), userFeeds);
 
         System.out.println(feedListDto);
+    }
+
+
+    @Test
+    @DisplayName("메인 피드")
+    @Rollback(value = false)
+    void getMainFeedList(){
+        List<FeedListDto> feedList = feedRepository.findAll().stream().map(FeedListDto::new).toList();
+
+        System.out.println(feedList);
+    }
+
+    @Test
+    @DisplayName("피드 상세 정보")
+    @Rollback(value = false)
+    void getFeedDetail(){
+        Feed feed = feedRepository.findById(1L).orElseThrow(
+                () -> new IllegalStateException("해당 피드를 찾지 못했습니다.")
+        );
+
+        //TODO : 댓글 레포에서 Feed를 이용해 가져오기
+        //List<Comment> comments = feedRepository.findAllByFeed(feed);
+
+
+        //TODO : DTO 필드 정한 후 반환해주기
+
     }
 
 }
