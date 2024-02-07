@@ -1,6 +1,7 @@
 package com.sparta.duopleaseduo;
 
 import com.sparta.duopleaseduo.dto.CommentRequestDto;
+import com.sparta.duopleaseduo.dto.CommentResponseDto;
 import com.sparta.duopleaseduo.service.CommentService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,7 +21,10 @@ public class CommentTest {
         CommentRequestDto requestDto = new CommentRequestDto ();
         requestDto.setComment("1차 캐시 : comment 저장");
 
-        service.createComment(requestDto);
+        CommentResponseDto res = service.createComment(requestDto);
+        System.out.println("==========================================================================================");
+        System.out.println(res.getCode());
+        System.out.println(res.getStatus());
     }
     @Test
     @DisplayName("2차 캐시 : comment 변경")
@@ -30,13 +34,19 @@ public class CommentTest {
         requestDto.setComment("2차 캐시 : comment 변경");
         //LocalDateTime localDate = LocalDateTime.now();
         //requestDto.setCreatedAt(localDate);
-        service.updateComment(1L,requestDto);
+        CommentResponseDto res = service.updateComment(3L,requestDto);
+        System.out.println("==========================================================================================");
+        System.out.println(res.getCode());
+        System.out.println(res.getStatus());
     }
     //
     @Test
     @DisplayName("3차 캐시 : comment 삭제")
     @Rollback(value = false)
     void deleteComment(){
-        service.deleteComment(1L);
+        CommentResponseDto res = service.deleteComment(2L);
+        System.out.println("==========================================================================================");
+        System.out.println(res.getCode());
+        System.out.println(res.getStatus());
     }
 }
