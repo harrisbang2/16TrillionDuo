@@ -28,4 +28,9 @@ public class Feed extends Timestamped{
         this.title = title;
         this.content = content;
     }
+
+    public void update(String title, String content){
+        this.title = title;
+        this.content = content;
+    }
 }
