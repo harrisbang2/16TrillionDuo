@@ -40,9 +40,6 @@ public class CommentTest {
     @DisplayName("3차 캐시 : comment 삭제")
     @Rollback(value = false)
     void deleteComment(){
-        CommentRequestDto requestDto = new CommentRequestDto ();
-        //LocalDateTime localDate = LocalDateTime.now();
-        //requestDto.setCreatedAt(localDate);
         service.deleteComment(1L);
     }
 }
