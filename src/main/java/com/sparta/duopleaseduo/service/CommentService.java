@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLOutput;
 import java.util.List;
 
 @Service
@@ -19,10 +20,18 @@ public class CommentService {
 
     // 추가
     public CommentResponseDto createComment(CommentRequestDto requestDto) { /// 유저랑 Feed 추가할 예정
-        Comment comment = new Comment(requestDto); // user feed 추가 예정
-
+        Comment comment;
+        Comment savecomment;
+        try {
+            comment = new Comment(requestDto); // user feed 추가 예정
+            savecomment = commentRepository.save(comment);
+        }catch (Exception e){
+            CommentResponseDto ScResponseDto = new CommentResponseDto();
+            ScResponseDto.setCode(400);
+            ScResponseDto.setMessage("댓글 생성 오류 실패!");
+            return ScResponseDto;
+        }
         // DB 저장
-        Comment savecomment = commentRepository.save(comment);
 
         // Entity -> ResponseDto
         CommentResponseDto ScResponseDto = new CommentResponseDto(savecomment);
@@ -37,8 +46,19 @@ public class CommentService {
     ///// 수정
     public CommentResponseDto updateComment(Long id, CommentRequestDto requestDto) {  /// 유저랑 Feed 추가할 예정 (User user , Feed feed)
         //  DB에 존재하는지 확인
-        Comment comment = findComment(id);
         // 유저 확인.
+        Comment comment;
+        try {
+            comment = findComment(id);
+        }catch (Exception e){
+            System.out.println("updateComment 에 없는 아이디 입니다");
+            CommentResponseDto commentResponseDto=new CommentResponseDto();
+            commentResponseDto.setCode(400);
+            commentResponseDto.setStatus("Not Ok");
+            commentResponseDto.setMessage("수정 / 검색 에러");
+            return  commentResponseDto;
+
+        }
 //        if(comment.getUser().getId().equals(user.getID) && comment.getFeed().getId().equals(feed.getID){
 //            //  내용 수정
 //            comment.update(requestDto);
@@ -61,6 +81,7 @@ public class CommentService {
 
     /// 삭제
     public CommentResponseDto deleteComment(Long id) { /// 유저랑 Feed 추가할 예정 (User user , Feed feed)
+
         Comment comment = findComment(id);
         // 유저 확인.
 //        if(comment.getUser().getId().equals(user.getID) && comment.getFeed().getId().equals(feed.getID){
@@ -81,6 +102,7 @@ public class CommentService {
     }
 
     private Comment findComment(Long id) {
+        Comment comment;
         return commentRepository.findById(id).orElseThrow(()-> new NullPointerException("그런 유저는 없어요"));
     }
 }
