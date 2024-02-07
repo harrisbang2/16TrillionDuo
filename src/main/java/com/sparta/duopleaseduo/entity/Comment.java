@@ -1,17 +1,15 @@
 package com.sparta.duopleaseduo.entity;
 
+import com.sparta.duopleaseduo.dto.CommentRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import com.sparta.duopleaseduo.entity.User;
-
-import java.time.LocalDate;
 
 @Entity
 @Getter
 @Table(name = "comment")
 @NoArgsConstructor
-public class Comment extends Timestamped{
+public class Comment { //extends Timestamped
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,4 +23,12 @@ public class Comment extends Timestamped{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "feed_id")
     private Feed feed;
+
+    public Comment(CommentRequestDto requestDto) {
+        this.comment = requestDto.getComment();
+    }
+
+    public void update(CommentRequestDto requestDto) {
+        this.comment = requestDto.getComment();
+    }
 }
