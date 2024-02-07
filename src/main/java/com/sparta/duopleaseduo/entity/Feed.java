@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @Table(name = "feeds")
 @NoArgsConstructor
-public class Feed {
+public class Feed extends Timestamped{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
