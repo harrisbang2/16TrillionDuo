@@ -1,5 +1,7 @@
 package com.sparta.duopleaseduo.service;
 
+import com.sparta.duopleaseduo.dto.FeedListDto;
+import com.sparta.duopleaseduo.dto.UserFeedListDto;
 import com.sparta.duopleaseduo.entity.Feed;
 import com.sparta.duopleaseduo.entity.User;
 import com.sparta.duopleaseduo.repository.FeedRepository;
@@ -11,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @SpringBootTest
 @Transactional
@@ -25,8 +29,12 @@ class FeedServiceTest {
     @DisplayName("피드 추가")
     @Rollback(value = false)
     void createFeed(){
-        User user = new User("user1@naver.com", "0000", "user1", "user1입니다");
-        userRepository.save(user);
+//        User user = new User("user1@naver.com", "0000", "user1", "user1입니다");
+//        userRepository.save(user);
+
+        User user = userRepository.findById(1L).orElseThrow(()
+                -> new IllegalStateException("해당 유저를 찾을 수 없습니다.")
+        );
 
         Feed feed = new Feed(user, "title", "content");
         Feed save = feedRepository.save(feed);
@@ -99,6 +107,21 @@ class FeedServiceTest {
 
         Assertions.assertEquals(user, feed.getUser());
         feedRepository.delete(feed);
+    }
+
+    @Test
+    @DisplayName("개인 피드 조회")
+    @Rollback(value = false)
+    void getUserFeedList(){
+        User user = userRepository.findById(1L).orElseThrow(()  -> new IllegalStateException("해당 유저를 찾지 못했습니다."));
+
+        List<FeedListDto> userFeeds = feedRepository.findAllByUser(user).stream().map(FeedListDto::new).toList();
+
+
+
+        UserFeedListDto feedListDto = new UserFeedListDto(user.getUsername(), user.getIntroduce(), userFeeds);
+
+        System.out.println(feedListDto);
     }
 
 }
