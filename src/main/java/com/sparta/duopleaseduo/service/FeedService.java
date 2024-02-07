@@ -19,11 +19,9 @@ public class FeedService {
 
 
     public Long createFeed(FeedRequestDto feedRequestDto, HttpServletRequest request) {
-        String userName = jwtUtil.validateTokenAndGetUserName(request);
+        String email = jwtUtil.validateTokenAndGetUserName(request);
 
-        //TODO : 유저 찾기
-        User user = userRepository.findByUsername(userName).orElseThrow(()
-        -> new IllegalStateException("해당 유저를 찾을 수 없습니다."));
+        User user = getUser(email);
 
         Feed feed = new Feed(user, feedRequestDto.getTitle(), feedRequestDto.getContents());
 
@@ -31,5 +29,44 @@ public class FeedService {
 
         return feed.getId();
     }
+
+    public Long updateFeed(Long id, FeedRequestDto feedRequestDto, HttpServletRequest request) {
+        String email = jwtUtil.validateTokenAndGetUserName(request);
+        User user = getUser(email);
+        Feed feed = getFeed(id);
+
+        validateUser(user, feed, "피드를 수정할 수 없습니다.");
+
+        feed.update(feedRequestDto.getTitle(), feedRequestDto.getContents());
+        return feed.getId();
+    }
+
+
+    public void deleteFeed(Long id, HttpServletRequest request) {
+        String email = jwtUtil.validateTokenAndGetUserName(request);
+        User user = getUser(email);
+        Feed feed = getFeed(id);
+
+        validateUser(user, feed, "피드를 삭제할 수 없습니다.");
+
+        feedRepository.delete(feed);
+    }
+
+
+
+    private Feed getFeed(Long id) {
+        return feedRepository.findById(id).orElseThrow(() -> new IllegalStateException("해당 피드를 찾지 못했습니다."));
+    }
+
+    private User getUser(String userName) {
+        return userRepository.findByUsername(userName).orElseThrow(()
+                -> new IllegalStateException("해당 유저를 찾을 수 없습니다."));
+    }
+    private void validateUser(User user, Feed feed, String s) {
+        if (user != feed.getUser()) {
+            throw new IllegalStateException(s);
+        }
+    }
+
 
 }

@@ -17,8 +17,24 @@ public class FeedController {
 
     @PostMapping("")
     public ResponseEntity<Long> createFeed(@RequestBody FeedRequestDto feedRequestDto, HttpServletRequest request) {
-        Long id = feedService.createFeed(feedRequestDto, request);
+        Long feedId = feedService.createFeed(feedRequestDto, request);
 
-        return ResponseEntity.status(201).body(id);
+        return ResponseEntity.status(201).body(feedId);
     }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Long> updateFeed(@PathVariable Long id, @RequestBody FeedRequestDto feedRequestDto, HttpServletRequest request){
+        Long feedId = feedService.updateFeed(id, feedRequestDto, request);
+
+        return ResponseEntity.ok(feedId);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteFeed(@PathVariable Long id, HttpServletRequest request){
+        feedService.deleteFeed(id, request);
+
+        return ResponseEntity.ok("OK");
+    }
+
+
 }

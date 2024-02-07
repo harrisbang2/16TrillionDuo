@@ -12,8 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @SpringBootTest
 @Transactional
 class FeedServiceTest {
@@ -27,7 +25,7 @@ class FeedServiceTest {
     @DisplayName("피드 추가")
     @Rollback(value = false)
     void createFeed(){
-        User user = new User("user@naver.com", "0000", "user", "user입니다");
+        User user = new User("user1@naver.com", "0000", "user1", "user1입니다");
         userRepository.save(user);
 
         Feed feed = new Feed(user, "title", "content");
@@ -53,6 +51,20 @@ class FeedServiceTest {
         }
 
         feed.update("title2", "content2");
+    }
+
+    @Test
+    @DisplayName("다른 사람이 수정하려고 할 때")
+    @Rollback(value = false)
+    void updateFeedException() {
+        User user = userRepository.findById(1L).orElseThrow(()
+                -> new IllegalStateException("해당 유저를 찾을 수 없습니다.")
+        );
+
+        Feed feed = feedRepository.findById(1L).orElseThrow(()
+                -> new IllegalStateException("해당 피드를 찾을 수 없습니다.")
+        );
+
     }
 
 }
