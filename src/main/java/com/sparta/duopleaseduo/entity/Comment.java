@@ -1,6 +1,7 @@
 package com.sparta.duopleaseduo.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import com.sparta.duopleaseduo.entity.User;
@@ -10,7 +11,7 @@ import java.time.LocalDate;
 @Entity
 @Getter
 @Table(name = "comment")
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment extends Timestamped{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
