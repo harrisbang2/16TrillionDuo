@@ -51,7 +51,7 @@ public class CommentService {
     }
 
     /// 삭제
-    public Long deleteComment(Long id) { /// 유저랑 Feed 추가할 예정 (User user , Feed feed)
+    public CommentResponseDto deleteComment(Long id) { /// 유저랑 Feed 추가할 예정 (User user , Feed feed)
         Comment comment = findComment(id);
         // 유저 확인.
 //        if(comment.getUser().getId().equals(user.getID) && comment.getFeed().getId().equals(feed.getID){
@@ -61,8 +61,14 @@ public class CommentService {
 //        else {
 //            throw new IllegalStateException("삐빅 ! 유저 혹은 feed 가 다릅니다!!!!");
 //        }
-        commentRepository.delete(comment);
-        return id;
+        try{
+            commentRepository.delete(comment);
+        } catch (Exception e){
+            System.out.println("deleteComment 에서 오류");
+
+            return new CommentResponseDto(400,comment);
+        }
+        return new CommentResponseDto(comment);
     }
 
     private Comment findComment(Long id) {
