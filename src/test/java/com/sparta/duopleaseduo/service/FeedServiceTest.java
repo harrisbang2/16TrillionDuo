@@ -57,6 +57,22 @@ class FeedServiceTest {
     @DisplayName("다른 사람이 수정하려고 할 때")
     @Rollback(value = false)
     void updateFeedException() {
+        User user = userRepository.findById(3L).orElseThrow(()
+                -> new IllegalStateException("해당 유저를 찾을 수 없습니다.")
+        );
+
+        Feed feed = feedRepository.findById(1L).orElseThrow(()
+                -> new IllegalStateException("해당 피드를 찾을 수 없습니다.")
+        );
+
+        Assertions.assertEquals(user, feed.getUser());
+    }
+
+
+    @Test
+    @DisplayName("삭제")
+    @Rollback(value = false)
+    void deleteFeed(){
         User user = userRepository.findById(1L).orElseThrow(()
                 -> new IllegalStateException("해당 유저를 찾을 수 없습니다.")
         );
@@ -65,6 +81,24 @@ class FeedServiceTest {
                 -> new IllegalStateException("해당 피드를 찾을 수 없습니다.")
         );
 
+        Assertions.assertEquals(user, feed.getUser());
+        feedRepository.delete(feed);
+    }
+
+    @Test
+    @DisplayName("다른 유저가 삭제")
+    @Rollback(value = false)
+    void deleteFeedException(){
+        User user = userRepository.findById(3L).orElseThrow(()
+                -> new IllegalStateException("해당 유저를 찾을 수 없습니다.")
+        );
+
+        Feed feed = feedRepository.findById(1L).orElseThrow(()
+                -> new IllegalStateException("해당 피드를 찾을 수 없습니다.")
+        );
+
+        Assertions.assertEquals(user, feed.getUser());
+        feedRepository.delete(feed);
     }
 
 }

@@ -52,8 +52,6 @@ public class FeedService {
         feedRepository.delete(feed);
     }
 
-
-
     private Feed getFeed(Long id) {
         return feedRepository.findById(id).orElseThrow(() -> new IllegalStateException("해당 피드를 찾지 못했습니다."));
     }
