@@ -19,8 +19,7 @@ public class CommentTest {
     void createComment(){
         CommentRequestDto requestDto = new CommentRequestDto ();
         requestDto.setComment("1차 캐시 : comment 저장");
-        //LocalDateTime localDate = LocalDateTime.now();
-        //requestDto.setCreatedAt(localDate);
+
         service.createComment(requestDto);
     }
     @Test
