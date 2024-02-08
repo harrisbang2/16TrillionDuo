@@ -2,6 +2,7 @@ package com.sparta.duopleaseduo.service;
 
 import com.sparta.duopleaseduo.dto.request.LoginRequestDto;
 import com.sparta.duopleaseduo.dto.request.SignUpRequestDto;
+import com.sparta.duopleaseduo.dto.request.UpdatePasswordRequestDto;
 import com.sparta.duopleaseduo.dto.request.UpdateUserRequestDto;
 import com.sparta.duopleaseduo.dto.response.UserResponseDto;
 import com.sparta.duopleaseduo.entity.User;
@@ -69,6 +70,20 @@ public class UserService {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         };
         findUser.update(requestDto);
+        return new UserResponseDto(findUser);
+    }
+
+
+    @Transactional
+    public UserResponseDto updatePassword(UpdatePasswordRequestDto requestDto, HttpServletRequest request) {
+        String userEmail = jwtUtil.validateTokenAndGetUserName(request);
+        User findUser = userRepository.findByEmail(userEmail).orElseThrow(
+                () -> new NoSuchElementException("회원이 아닙니다.")
+        );
+        if (!passwordEncoder().matches(requestDto.getPassword(), findUser.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+        findUser.updatePassword(requestDto);
         return new UserResponseDto(findUser);
     }
 }
