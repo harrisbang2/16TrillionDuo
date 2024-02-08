@@ -1,6 +1,6 @@
 package com.sparta.duopleaseduo;
 
-import com.sparta.duopleaseduo.dto.CommentRequestDto;
+import com.sparta.duopleaseduo.dto.request.CommentRequestDto;
 import com.sparta.duopleaseduo.entity.Feed;
 import com.sparta.duopleaseduo.entity.User;
 import com.sparta.duopleaseduo.repository.FeedRepository;
@@ -12,8 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
-
-import java.util.Optional;
 
 
 @SpringBootTest

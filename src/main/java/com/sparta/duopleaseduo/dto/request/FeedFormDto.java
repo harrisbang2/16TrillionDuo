@@ -1,4 +1,4 @@
-package com.sparta.duopleaseduo.dto;
+package com.sparta.duopleaseduo.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

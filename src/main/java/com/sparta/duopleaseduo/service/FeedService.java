@@ -1,9 +1,9 @@
 package com.sparta.duopleaseduo.service;
 
-import com.sparta.duopleaseduo.dto.FeedDetailResponseDto;
-import com.sparta.duopleaseduo.dto.FeedFormDto;
-import com.sparta.duopleaseduo.dto.FeedListDto;
-import com.sparta.duopleaseduo.dto.UserFeedListResponseDto;
+import com.sparta.duopleaseduo.dto.response.FeedDetailResponseDto;
+import com.sparta.duopleaseduo.dto.request.FeedFormDto;
+import com.sparta.duopleaseduo.dto.response.FeedListDto;
+import com.sparta.duopleaseduo.dto.response.UserFeedListResponseDto;
 import com.sparta.duopleaseduo.entity.Feed;
 import com.sparta.duopleaseduo.entity.User;
 import com.sparta.duopleaseduo.jwt.JwtUtil;

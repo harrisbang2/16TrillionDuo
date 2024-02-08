@@ -1,4 +1,4 @@
-package com.sparta.duopleaseduo.dto;
+package com.sparta.duopleaseduo.dto.request;
 
 import com.sparta.duopleaseduo.entity.Feed;
 import com.sparta.duopleaseduo.entity.User;
