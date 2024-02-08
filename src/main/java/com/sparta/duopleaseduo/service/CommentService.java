@@ -32,7 +32,6 @@ public class CommentService {
             return commentResponseDto;
         }
         // DB 저장
-
         // Entity -> ResponseDto
          commentResponseDto = new CommentResponseDto(savecomment);
         commentResponseDto.setCode(201);
@@ -43,7 +42,7 @@ public class CommentService {
 //    public List<CommentResponseDto> getComments(Long id) { /// 유저랑 Feed 추가할 예정
 //         return null;
 //    }
-    ///// 수정
+///// 수정
     public CommentResponseDto updateComment(Long id, CommentRequestDto requestDto) {  /// 유저랑 Feed 추가할 예정 (User user , Feed feed)
         //  DB에 존재하는지 확인
         // 유저 확인.
@@ -56,7 +55,6 @@ public class CommentService {
             commentResponseDto.setStatus("Not Ok");
             commentResponseDto.setMessage("수정 / 검색 에러");
             return  commentResponseDto;
-
         }
 //        if(comment.getUser().getId().equals(user.getID) && comment.getFeed().getId().equals(feed.getID){
 //            //  내용 수정
