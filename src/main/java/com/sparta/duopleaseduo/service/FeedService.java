@@ -78,6 +78,8 @@ public class FeedService {
 
     public FeedDetailResponseDto getFeedDetail(Long id) {
         Feed feed = getFeed(id);
+
+        commentRepository.findAllByFeed(feed);
         /*
         TODO : 1. feed와 같은 값인 Commnet리스트 가져오기
                2. feedLike가져오기

@@ -1,7 +1,9 @@
 package com.sparta.duopleaseduo;
 
+import com.sparta.duopleaseduo.dto.request.CommentRequestDto;
 import com.sparta.duopleaseduo.dto.response.FeedListDto;
 import com.sparta.duopleaseduo.dto.response.UserFeedListResponseDto;
+import com.sparta.duopleaseduo.entity.Comment;
 import com.sparta.duopleaseduo.entity.Feed;
 import com.sparta.duopleaseduo.entity.User;
 import com.sparta.duopleaseduo.repository.CommentRepository;
@@ -94,6 +96,26 @@ class FeedTest {
 
         Assertions.assertEquals(user, feed.getUser());
         feedRepository.delete(feed);
+    }
+
+    @Test
+    @DisplayName("댓글 더미 데이터 생성")
+    @Rollback(value = false)
+    void createCommentData() {
+        User user = userRepository.findById(1L).orElseThrow(()
+                -> new IllegalStateException("해당 유저를 찾을 수 없습니다.")
+        );
+
+        Feed feed = feedRepository.findById(1L).orElseThrow(()
+                -> new IllegalStateException("해당 피드를 찾을 수 없습니다.")
+        );
+        CommentRequestDto commentRequestDto = new CommentRequestDto();
+        commentRequestDto.setComment("hello");
+        commentRequestDto.setFeed(feed);
+        commentRequestDto.setUser(user);
+        Comment comment = new Comment(commentRequestDto);
+
+         commentRepository.save(comment);
     }
 
     @Test
