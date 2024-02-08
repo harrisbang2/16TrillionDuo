@@ -2,14 +2,17 @@ package com.sparta.duopleaseduo.entity;
 
 import com.sparta.duopleaseduo.dto.CommentRequestDto;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @Table(name = "comment")
+
 @NoArgsConstructor
 public class Comment { //extends Timestamped
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
