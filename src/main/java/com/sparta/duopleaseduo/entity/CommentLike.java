@@ -1,11 +1,14 @@
 package com.sparta.duopleaseduo.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @Table(name = "commentlike")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CommentLike {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
