@@ -3,13 +3,12 @@ package com.sparta.duopleaseduo.service;
 import com.sparta.duopleaseduo.dto.CommentRequestDto;
 import com.sparta.duopleaseduo.dto.CommentResponseDto;
 import com.sparta.duopleaseduo.entity.Comment;
-import com.sparta.duopleaseduo.entity.User;
+
 import com.sparta.duopleaseduo.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -17,18 +16,28 @@ public class CommentService {
     @Autowired
     private final CommentRepository commentRepository;
 
+    private CommentResponseDto commentResponseDto;
+
     // 추가
     public CommentResponseDto createComment(CommentRequestDto requestDto) { /// 유저랑 Feed 추가할 예정
-        Comment comment = new Comment(requestDto); // user feed 추가 예정
-
+        Comment comment;
+        Comment savecomment;
+        try {
+            comment = new Comment(requestDto); // user feed 추가 예정
+            savecomment = commentRepository.save(comment);
+        }catch (Exception e){
+             commentResponseDto = new CommentResponseDto();
+            commentResponseDto.setCode(400);
+            commentResponseDto.setMessage("댓글 생성 오류 실패!");
+            return commentResponseDto;
+        }
         // DB 저장
-        Comment savecomment = commentRepository.save(comment);
 
         // Entity -> ResponseDto
-        CommentResponseDto ScResponseDto = new CommentResponseDto(savecomment);
-        ScResponseDto.setCode(201);
-        ScResponseDto.setMessage("댓글 생성 성공");
-        return ScResponseDto;
+         commentResponseDto = new CommentResponseDto(savecomment);
+        commentResponseDto.setCode(201);
+        commentResponseDto.setMessage("댓글 생성 성공");
+        return commentResponseDto;
     }
     // 조회
 //    public List<CommentResponseDto> getComments(Long id) { /// 유저랑 Feed 추가할 예정
@@ -37,8 +46,18 @@ public class CommentService {
     ///// 수정
     public CommentResponseDto updateComment(Long id, CommentRequestDto requestDto) {  /// 유저랑 Feed 추가할 예정 (User user , Feed feed)
         //  DB에 존재하는지 확인
-        Comment comment = findComment(id);
         // 유저 확인.
+        Comment comment;
+        try {
+            comment = findComment(id);
+        }catch (Exception e){
+            System.out.println("updateComment 에 없는 아이디 입니다");
+            commentResponseDto.setCode(400);
+            commentResponseDto.setStatus("Not Ok");
+            commentResponseDto.setMessage("수정 / 검색 에러");
+            return  commentResponseDto;
+
+        }
 //        if(comment.getUser().getId().equals(user.getID) && comment.getFeed().getId().equals(feed.getID){
 //            //  내용 수정
 //            comment.update(requestDto);
@@ -51,9 +70,9 @@ public class CommentService {
             commentRepository.save(comment);
         } catch (Exception e){
             System.out.println("updateComment 에서 오류");
-            return new CommentResponseDto(400,comment);
+            return new CommentResponseDto(400);
         }
-        CommentResponseDto commentResponseDto=new CommentResponseDto(comment);
+        commentResponseDto=new CommentResponseDto(comment);
         commentResponseDto.setCode(200);
         commentResponseDto.setMessage("수정 되었습니다");
         return commentResponseDto;
@@ -61,6 +80,7 @@ public class CommentService {
 
     /// 삭제
     public CommentResponseDto deleteComment(Long id) { /// 유저랑 Feed 추가할 예정 (User user , Feed feed)
+
         Comment comment = findComment(id);
         // 유저 확인.
 //        if(comment.getUser().getId().equals(user.getID) && comment.getFeed().getId().equals(feed.getID){
@@ -75,7 +95,7 @@ public class CommentService {
         } catch (Exception e){
             System.out.println("deleteComment 에서 오류");
 
-            return new CommentResponseDto(400,comment);
+            return new CommentResponseDto(400);
         }
         return new CommentResponseDto(comment);
     }
