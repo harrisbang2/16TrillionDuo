@@ -19,10 +19,12 @@ public class User {
     private String email;
     @Column(name = "password", nullable = false)
     private String password;
+
     @Column(name = "username", nullable = false)
     private String username;
     @Column(name = "introduce")
     private String introduce;
+
 
     public User(SignUpRequestDto requestDto, String encodedPassword) {
         this.email = requestDto.getEmail();
