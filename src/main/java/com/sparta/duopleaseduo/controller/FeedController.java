@@ -1,17 +1,21 @@
 package com.sparta.duopleaseduo.controller;
 
 
+import com.sparta.duopleaseduo.dto.FeedDetailResponseDto;
 import com.sparta.duopleaseduo.dto.FeedFormDto;
-import com.sparta.duopleaseduo.dto.UserFeedListDto;
+import com.sparta.duopleaseduo.dto.FeedListDto;
+import com.sparta.duopleaseduo.dto.UserFeedListResponseDto;
 import com.sparta.duopleaseduo.service.FeedService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/feed")
+@RequestMapping("/feeds")
 public class FeedController {
     private final FeedService feedService;
 
@@ -38,10 +42,25 @@ public class FeedController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserFeedListDto> getFeedList(@PathVariable Long id, HttpServletRequest request){
-        UserFeedListDto feedListDto = feedService.getUserFeedList(id, request);
+    public ResponseEntity<UserFeedListResponseDto> getFeedList(@PathVariable Long id, HttpServletRequest request){
+        UserFeedListResponseDto feedListDto = feedService.getUserFeedList(id, request);
 
-        return null;
+        return ResponseEntity.ok(feedListDto);
+    }
+
+
+    @GetMapping("")
+    public ResponseEntity<List<FeedListDto>> getMainFeedList(){
+        List<FeedListDto> feedList = feedService.getMainFeedList();
+
+        return ResponseEntity.ok(feedList);
+    }
+
+    @GetMapping("/comment/{id}")
+    public ResponseEntity<FeedDetailResponseDto> getFeedDetail(@PathVariable Long id){
+        FeedDetailResponseDto feedDetailResponseDto = feedService.getFeedDetail(id);
+
+        return ResponseEntity.ok(feedDetailResponseDto);
     }
 
 
