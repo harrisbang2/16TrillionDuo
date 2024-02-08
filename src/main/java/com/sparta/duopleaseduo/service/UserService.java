@@ -2,10 +2,12 @@ package com.sparta.duopleaseduo.service;
 
 import com.sparta.duopleaseduo.dto.request.LoginRequestDto;
 import com.sparta.duopleaseduo.dto.request.SignUpRequestDto;
+import com.sparta.duopleaseduo.dto.request.UpdateUserRequestDto;
 import com.sparta.duopleaseduo.dto.response.UserResponseDto;
 import com.sparta.duopleaseduo.entity.User;
 import com.sparta.duopleaseduo.jwt.JwtUtil;
 import com.sparta.duopleaseduo.repository.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpRequest;
@@ -15,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.net.http.HttpResponse;
+import java.nio.file.AccessDeniedException;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -52,6 +56,19 @@ public class UserService {
             throw new IllegalArgumentException("아이디, 비밀번호가 올바르지 않습니다.");
         }
         log.info("로그인 성공");
+        return new UserResponseDto(findUser);
+    }
+
+    @Transactional
+    public UserResponseDto updateUser(UpdateUserRequestDto requestDto, HttpServletRequest request) {
+        String userEmail = jwtUtil.validateTokenAndGetUserName(request);
+        User findUser = userRepository.findByEmail(userEmail).orElseThrow(
+                () -> new NoSuchElementException("회원이 아닙니다.")
+        );
+        if(!passwordEncoder().matches(requestDto.getPassword(), findUser.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        };
+        findUser.update(requestDto);
         return new UserResponseDto(findUser);
     }
 }

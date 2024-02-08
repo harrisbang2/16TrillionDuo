@@ -1,6 +1,7 @@
 package com.sparta.duopleaseduo.entity;
 
 import com.sparta.duopleaseduo.dto.request.SignUpRequestDto;
+import com.sparta.duopleaseduo.dto.request.UpdateUserRequestDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -40,5 +41,10 @@ public class User {
         this.password = password;
         this.username = username;
         this.introduce = introduce;
+    }
+
+    public void update(UpdateUserRequestDto requestDto) {
+        this.username = requestDto.getUsername();
+        this.introduce = requestDto.getIntroduce();
     }
 }

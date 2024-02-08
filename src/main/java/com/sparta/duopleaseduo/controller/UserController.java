@@ -2,21 +2,22 @@ package com.sparta.duopleaseduo.controller;
 
 import com.sparta.duopleaseduo.dto.request.LoginRequestDto;
 import com.sparta.duopleaseduo.dto.request.SignUpRequestDto;
+import com.sparta.duopleaseduo.dto.request.UpdateUserRequestDto;
 import com.sparta.duopleaseduo.dto.response.UserResponseDto;
 import com.sparta.duopleaseduo.jwt.JwtUtil;
 import com.sparta.duopleaseduo.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.Response;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,7 +25,7 @@ import java.util.stream.Collectors;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/user")
+@RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
@@ -51,7 +52,12 @@ public class UserController {
                 .body(responseDto);
     }
 
-
+    @PatchMapping()
+    public ResponseEntity<UserResponseDto> updateUser(@RequestBody UpdateUserRequestDto requestDto, HttpServletRequest request) {
+        log.info("updateUser Controller");
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(userService.updateUser(requestDto, request));
+    }
 
     private List<String> createErrorMessages(BindingResult bindingResult) {
         return bindingResult.getAllErrors()
