@@ -8,7 +8,7 @@ import lombok.Setter;
 public class UserResponseDto {
 
     private Long id;
-    public UserResponseDto(User savedUser) {
-        this.id = savedUser.getId();
+    public UserResponseDto(User user) {
+        this.id = user.getId();
     }
 }
