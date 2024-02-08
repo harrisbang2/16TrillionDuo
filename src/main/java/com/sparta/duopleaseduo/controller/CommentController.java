@@ -4,6 +4,7 @@ import com.sparta.duopleaseduo.dto.request.CommentRequestDto;
 import com.sparta.duopleaseduo.service.CommentService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ import static org.hibernate.query.sqm.tree.SqmNode.log;
 @RestController
 @RequiredArgsConstructor
 public class CommentController {
-
+    @Autowired
     private CommentService service;
     /// add comments
     @PostMapping("/comment/create")

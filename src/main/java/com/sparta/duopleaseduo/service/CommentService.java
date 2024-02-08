@@ -4,6 +4,7 @@ import com.sparta.duopleaseduo.dto.request.CommentRequestDto;
 import com.sparta.duopleaseduo.dto.response.CommentResponseDto;
 import com.sparta.duopleaseduo.entity.Comment;
 
+import com.sparta.duopleaseduo.jwt.JwtUtil;
 import com.sparta.duopleaseduo.repository.CommentRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -17,13 +18,13 @@ public class CommentService {
 
     private CommentResponseDto commentResponseDto;
 
-    private  String tokenHeader;
+    private JwtUtil jwtUtil;
 
     // 추가
     public CommentResponseDto createComment(CommentRequestDto requestDto,HttpServletRequest request) { /// 유저랑 Feed 추가할 예정
         Comment comment;
         Comment savecomment;
-        //tokenHeader = request.getHeader("Authorization");
+        System.out.println(jwtUtil.validateTokenAndGetUserName(request));
         try {
             comment = new Comment(requestDto); // user feed 추가 예정
             savecomment = commentRepository.save(comment);
@@ -45,7 +46,6 @@ public class CommentService {
         //  DB에 존재하는지 확인
         // 유저 확인.
         Comment comment;
-        //tokenHeader = request.getHeader("Authorization");
         try {
             comment = findComment(id);
         }catch (Exception e){

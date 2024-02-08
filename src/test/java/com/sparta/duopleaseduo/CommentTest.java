@@ -31,8 +31,8 @@ public class CommentTest {
     @Rollback(value = false)
     void createComment(){
         CommentRequestDto requestDto = new CommentRequestDto ();
-        requestDto.setUser(findById(1L));
-        requestDto.setFeed(findByFeedBYId(1L));
+//        requestDto.setUser(findById(1L));
+//        requestDto.setFeed(findByFeedBYId(1L));
         requestDto.setComment("1차 캐시 : comment 저장");
         service.createComment(requestDto,request);
     }
