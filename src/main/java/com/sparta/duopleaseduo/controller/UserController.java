@@ -60,7 +60,9 @@ public class UserController {
 
     @PatchMapping("/password")
     public ResponseEntity<UserResponseDto> updatePassword(@RequestBody UpdatePasswordRequestDto requestDto, HttpServletRequest request) {
-        userService.updatePassword(requestDto, request);
+        log.info("updatePassword Controller");
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(userService.updatePassword(requestDto, request));
     }
 
     private List<String> createErrorMessages(BindingResult bindingResult) {

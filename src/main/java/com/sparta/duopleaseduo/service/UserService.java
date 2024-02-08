@@ -74,8 +74,16 @@ public class UserService {
     }
 
 
+    @Transactional
     public UserResponseDto updatePassword(UpdatePasswordRequestDto requestDto, HttpServletRequest request) {
         String userEmail = jwtUtil.validateTokenAndGetUserName(request);
-
+        User findUser = userRepository.findByEmail(userEmail).orElseThrow(
+                () -> new NoSuchElementException("회원이 아닙니다.")
+        );
+        if (!passwordEncoder().matches(requestDto.getPassword(), findUser.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+        findUser.updatePassword(requestDto);
+        return new UserResponseDto(findUser);
     }
 }
