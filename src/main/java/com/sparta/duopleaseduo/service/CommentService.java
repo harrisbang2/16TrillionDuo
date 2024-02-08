@@ -1,7 +1,7 @@
 package com.sparta.duopleaseduo.service;
 
-import com.sparta.duopleaseduo.dto.CommentRequestDto;
-import com.sparta.duopleaseduo.dto.CommentResponseDto;
+import com.sparta.duopleaseduo.dto.request.CommentRequestDto;
+import com.sparta.duopleaseduo.dto.response.CommentResponseDto;
 import com.sparta.duopleaseduo.entity.Comment;
 
 import com.sparta.duopleaseduo.repository.CommentRepository;
