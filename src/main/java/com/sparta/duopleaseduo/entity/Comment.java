@@ -28,7 +28,9 @@ public class Comment { //extends Timestamped
     private Feed feed;
 
     public Comment(CommentRequestDto requestDto) {
+        this.user = requestDto.getUser();
         this.comment = requestDto.getComment();
+        this.feed = requestDto.getFeed();
     }
 
     public void update(CommentRequestDto requestDto) {
