@@ -2,6 +2,7 @@ package com.sparta.duopleaseduo.service;
 
 import com.sparta.duopleaseduo.dto.request.LoginRequestDto;
 import com.sparta.duopleaseduo.dto.request.SignUpRequestDto;
+import com.sparta.duopleaseduo.dto.request.UpdatePasswordRequestDto;
 import com.sparta.duopleaseduo.dto.request.UpdateUserRequestDto;
 import com.sparta.duopleaseduo.dto.response.UserResponseDto;
 import com.sparta.duopleaseduo.entity.User;
@@ -70,5 +71,11 @@ public class UserService {
         };
         findUser.update(requestDto);
         return new UserResponseDto(findUser);
+    }
+
+
+    public UserResponseDto updatePassword(UpdatePasswordRequestDto requestDto, HttpServletRequest request) {
+        String userEmail = jwtUtil.validateTokenAndGetUserName(request);
+
     }
 }
