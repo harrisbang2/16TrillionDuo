@@ -1,8 +1,7 @@
 package com.sparta.duopleaseduo.entity;
 
-import com.sparta.duopleaseduo.dto.CommentRequestDto;
+import com.sparta.duopleaseduo.dto.request.CommentRequestDto;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
