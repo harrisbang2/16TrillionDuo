@@ -7,6 +7,7 @@ import com.sparta.duopleaseduo.dto.UserFeedListResponseDto;
 import com.sparta.duopleaseduo.entity.Feed;
 import com.sparta.duopleaseduo.entity.User;
 import com.sparta.duopleaseduo.jwt.JwtUtil;
+import com.sparta.duopleaseduo.repository.CommentRepository;
 import com.sparta.duopleaseduo.repository.FeedRepository;
 import com.sparta.duopleaseduo.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,6 +21,7 @@ import java.util.List;
 public class FeedService {
     private final FeedRepository feedRepository;
     private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
     private final JwtUtil jwtUtil;
 
 
@@ -59,6 +61,8 @@ public class FeedService {
         String email = jwtUtil.validateTokenAndGetUserName(request);
         User user = userRepository.findById(id).orElseThrow(
                 () -> new IllegalStateException("해당 유저를 찾지 못했습니다."));
+
+
         List<FeedListDto> feedList = feedRepository.findAllByUser(user)
                 .stream()
                 .map(FeedListDto::new)
@@ -81,6 +85,9 @@ public class FeedService {
         return null;
     }
 
+
+
+
     private Feed getFeed(Long id) {
         return feedRepository.findById(id).orElseThrow(
                 () -> new IllegalStateException("해당 피드를 찾지 못했습니다."));
@@ -91,7 +98,7 @@ public class FeedService {
                 -> new IllegalStateException("해당 유저를 찾을 수 없습니다."));
     }
     private void validateUser(User user, Feed feed, String s) {
-        if (user != feed.getUser()) {
+         if (user != feed.getUser()) {
             throw new IllegalStateException(s);
         }
     }

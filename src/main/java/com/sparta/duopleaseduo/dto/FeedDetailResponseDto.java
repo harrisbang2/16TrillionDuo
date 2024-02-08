@@ -12,7 +12,7 @@ public class FeedDetailResponseDto {
     private String contents;
     /*
     Todo : Type(List) Comment Response dto 반환,
-      CommentResponseDto - content, createAt, commentListCount
+           CommentResponseDto - username, content, createAt, commentListCount
      */
     private Long likeCount;
     private LocalDateTime createdAt;

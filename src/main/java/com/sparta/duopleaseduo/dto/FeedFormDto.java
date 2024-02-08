@@ -7,6 +7,6 @@ import lombok.Data;
 public class FeedFormDto {
     @NotBlank(message = "제목을 적어주세요.")
     private String title;
-    @NotBlank(message = "제목을 적어주세요.")
+    @NotBlank(message = "내용을 적어주세요.")
     private String contents;
 }
