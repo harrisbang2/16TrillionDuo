@@ -1,10 +1,10 @@
 package com.sparta.duopleaseduo.controller;
 
 
-import com.sparta.duopleaseduo.dto.FeedDetailResponseDto;
-import com.sparta.duopleaseduo.dto.FeedFormDto;
-import com.sparta.duopleaseduo.dto.FeedListDto;
-import com.sparta.duopleaseduo.dto.UserFeedListResponseDto;
+import com.sparta.duopleaseduo.dto.response.FeedDetailResponseDto;
+import com.sparta.duopleaseduo.dto.request.FeedFormDto;
+import com.sparta.duopleaseduo.dto.response.FeedListDto;
+import com.sparta.duopleaseduo.dto.response.UserFeedListResponseDto;
 import com.sparta.duopleaseduo.service.FeedService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;

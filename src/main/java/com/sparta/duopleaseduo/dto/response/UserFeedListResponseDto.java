@@ -1,4 +1,4 @@
-package com.sparta.duopleaseduo.dto;
+package com.sparta.duopleaseduo.dto.response;
 
 import lombok.Data;
 

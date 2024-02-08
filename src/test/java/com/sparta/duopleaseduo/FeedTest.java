@@ -1,7 +1,7 @@
 package com.sparta.duopleaseduo;
 
-import com.sparta.duopleaseduo.dto.FeedListDto;
-import com.sparta.duopleaseduo.dto.UserFeedListResponseDto;
+import com.sparta.duopleaseduo.dto.response.FeedListDto;
+import com.sparta.duopleaseduo.dto.response.UserFeedListResponseDto;
 import com.sparta.duopleaseduo.entity.Feed;
 import com.sparta.duopleaseduo.entity.User;
 import com.sparta.duopleaseduo.repository.CommentRepository;
