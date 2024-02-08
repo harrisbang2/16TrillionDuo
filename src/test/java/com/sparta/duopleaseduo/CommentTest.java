@@ -1,10 +1,6 @@
 package com.sparta.duopleaseduo;
 
 import com.sparta.duopleaseduo.dto.request.CommentRequestDto;
-import com.sparta.duopleaseduo.entity.Feed;
-import com.sparta.duopleaseduo.entity.User;
-import com.sparta.duopleaseduo.repository.FeedRepository;
-import com.sparta.duopleaseduo.repository.UserRepository;
 import com.sparta.duopleaseduo.service.CommentService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.DisplayName;
@@ -18,10 +14,6 @@ import org.springframework.test.annotation.Rollback;
 public class CommentTest {
     @Autowired
     private CommentService service;
-    @Autowired
-    private UserRepository userrepo;
-    @Autowired
-    private FeedRepository feedrepo;
 
     //
     HttpServletRequest request;
@@ -55,7 +47,7 @@ public class CommentTest {
     }
     ////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////
-    /*                       싶패 코드들                       */
+    /*                       싶패 코드들                        */
     ////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////
     @Test
@@ -83,12 +75,5 @@ public class CommentTest {
         service.deleteComment(900L,request);
     }
 
-    /////// 우저랑 feed 받아오기.
-private User findById(long i) {
-        return userrepo.findById(i).orElseThrow(()-> new NullPointerException("그런 유저 없음니다."));
-}
-    private Feed findByFeedBYId(long l) {
-        return feedrepo.getById(l);
-    }
 
 }

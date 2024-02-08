@@ -36,7 +36,7 @@ public class CommentService {
         try {
             // !!!!!!!!!!!!!!!!!! 테스트 를 위해 한 주석입니다.
             //User user = userRepository.findByEmail(jwtUtil.validateTokenAndGetUserName(request)).orElseThrow(() -> new NoSuchElementException("회원이 아닙니다."));
-             User user = userRepository.findById(1l).orElseThrow(()->new NoSuchElementException("그런 유저 없어요"));
+             User user = userRepository.findById(1L).orElseThrow(()->new NoSuchElementException("그런 유저 없어요"));
              Feed feed = feedRepository.findById(id).orElseThrow(()->new NoSuchElementException("그런 feed 없어요"));
             //
             comment = new Comment(requestDto, user, feed); // user feed 추가 예정
@@ -61,7 +61,7 @@ public class CommentService {
             comment = findComment(id);
             // !!!!!!!!!!!!!!!!!! 테스트 를 위해 한 주석입니다. !!!!!!!!!!
             //user = userRepository.findByEmail(jwtUtil.validateTokenAndGetUserName(request)).orElseThrow(() -> new NoSuchElementException("회원이 아닙니다."));
-            user = userRepository.findById(1l).orElseThrow(()->new NoSuchElementException("그런 유저 없어요"));
+            user = userRepository.findById(1L).orElseThrow(()->new NoSuchElementException("그런 유저 없어요"));
         }catch (Exception e){
             throw new NoSuchElementException("updateComment 에 없는 Comment 아이디 입니다");
         }
@@ -88,9 +88,9 @@ public class CommentService {
         //
         try {
             comment = findComment(id);
-            user = userRepository.findById(1l).orElseThrow(() -> new NoSuchElementException("그런 유저 없어요"));
+            user = userRepository.findById(1L).orElseThrow(() -> new NoSuchElementException("deleteComment 유저 검색 실패"));
         }catch (Exception e){
-            throw new NoSuchElementException("deleteComment 에 없는 Comment 아이디 입니다");
+            throw new NoSuchElementException("deleteComment 에 없는 Comment 입니다");
         }
         // 유저 확인.
         // Feed 검사도 할가 했지만 뺏습니다 시간 지연을 최소한 으로 하기 위해서 그냥 comment id 랑 user id 로 했습니다
@@ -108,6 +108,6 @@ public class CommentService {
     }
 
     private Comment findComment(Long id) {
-        return commentRepository.findById(id).orElseThrow(()-> new NullPointerException("그런 유저는 없어요"));
+        return commentRepository.findById(id).orElseThrow(()-> new NullPointerException("findComment 유저 검색 실패"));
     }
 }
