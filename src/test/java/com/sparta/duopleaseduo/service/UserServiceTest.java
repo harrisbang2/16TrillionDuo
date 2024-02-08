@@ -5,7 +5,6 @@ import com.sparta.duopleaseduo.dto.request.SignUpRequestDto;
 import com.sparta.duopleaseduo.dto.response.UserResponseDto;
 import com.sparta.duopleaseduo.entity.User;
 import com.sparta.duopleaseduo.repository.UserRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -16,7 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
@@ -33,7 +32,9 @@ class UserServiceTest {
 
     @BeforeEach
     void createUser() {
-        user = userRepository.save(new User("test@email.com", passwordEncoder().encode("password"), "name","introduce"));
+        user = userRepository.save(new User("test@email.com",
+                passwordEncoder().encode("password"),
+                "name","introduce"));
     }
 
 
