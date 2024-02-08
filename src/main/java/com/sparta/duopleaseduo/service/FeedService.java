@@ -1,6 +1,7 @@
 package com.sparta.duopleaseduo.service;
 
 import com.sparta.duopleaseduo.dto.FeedFormDto;
+import com.sparta.duopleaseduo.dto.FeedListDto;
 import com.sparta.duopleaseduo.dto.UserFeedListDto;
 import com.sparta.duopleaseduo.entity.Feed;
 import com.sparta.duopleaseduo.entity.User;
@@ -10,6 +11,9 @@ import com.sparta.duopleaseduo.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -56,12 +60,19 @@ public class FeedService {
     public UserFeedListDto getUserFeedList(Long id, HttpServletRequest request) {
         String email = jwtUtil.validateTokenAndGetUserName(request);
         User user = userRepository.findById(id).orElseThrow(() -> new IllegalStateException("해당 유저를 찾지 못했습니다."));
+        List<FeedListDto> feedList = feedRepository.findAllByUser(user).stream().map(FeedListDto::new).toList();
 
-        return null;
+        return new UserFeedListDto(user.getUsername(), user.getIntroduce(), feedList);
+    }
+
+
+    public List<FeedListDto> getMainFeedList() {
+        return feedRepository.findAll().stream().map(FeedListDto::new).toList();
     }
 
     private Feed getFeed(Long id) {
-        return feedRepository.findById(id).orElseThrow(() -> new IllegalStateException("해당 피드를 찾지 못했습니다."));
+        return feedRepository.findById(id).orElseThrow(
+                () -> new IllegalStateException("해당 피드를 찾지 못했습니다."));
     }
 
     private User getUser(String userName) {
@@ -73,7 +84,5 @@ public class FeedService {
             throw new IllegalStateException(s);
         }
     }
-
-
 
 }

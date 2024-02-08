@@ -2,12 +2,15 @@ package com.sparta.duopleaseduo.controller;
 
 
 import com.sparta.duopleaseduo.dto.FeedFormDto;
+import com.sparta.duopleaseduo.dto.FeedListDto;
 import com.sparta.duopleaseduo.dto.UserFeedListDto;
 import com.sparta.duopleaseduo.service.FeedService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -41,7 +44,15 @@ public class FeedController {
     public ResponseEntity<UserFeedListDto> getFeedList(@PathVariable Long id, HttpServletRequest request){
         UserFeedListDto feedListDto = feedService.getUserFeedList(id, request);
 
-        return null;
+        return ResponseEntity.ok(feedListDto);
+    }
+
+
+    @GetMapping("")
+    public ResponseEntity<List<FeedListDto>> getMainFeedList(){
+        List<FeedListDto> feedList = feedService.getMainFeedList();
+
+        return ResponseEntity.ok(feedList);
     }
 
 
