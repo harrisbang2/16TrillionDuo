@@ -29,6 +29,12 @@ public class Comment extends Timestamped{ //extends Timestamped
     public Comment(CommentRequestDto requestDto) {
         this.comment = requestDto.getComment();
     }
+    public Comment(CommentRequestDto requestDto,User user, Feed feed) {
+        this.comment = requestDto.getComment();
+        this.user = user;
+        this.feed = feed;
+    }
+
 
     public void update(CommentRequestDto requestDto) {
         this.comment = requestDto.getComment();
