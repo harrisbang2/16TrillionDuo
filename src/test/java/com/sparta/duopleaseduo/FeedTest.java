@@ -1,8 +1,7 @@
 package com.sparta.duopleaseduo;
 
 import com.sparta.duopleaseduo.dto.FeedListDto;
-import com.sparta.duopleaseduo.dto.UserFeedListDto;
-import com.sparta.duopleaseduo.entity.Comment;
+import com.sparta.duopleaseduo.dto.UserFeedListResponseDto;
 import com.sparta.duopleaseduo.entity.Feed;
 import com.sparta.duopleaseduo.entity.User;
 import com.sparta.duopleaseduo.repository.CommentRepository;
@@ -121,7 +120,7 @@ class FeedTest {
 
         List<FeedListDto> userFeeds = feedRepository.findAllByUser(user).stream().map(FeedListDto::new).toList();
 
-        UserFeedListDto feedListDto = new UserFeedListDto(user.getUsername(), user.getIntroduce(), userFeeds);
+        UserFeedListResponseDto feedListDto = new UserFeedListResponseDto(user.getUsername(), user.getIntroduce(), userFeeds);
 
         System.out.println(feedListDto);
     }

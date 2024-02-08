@@ -1,8 +1,9 @@
 package com.sparta.duopleaseduo.service;
 
+import com.sparta.duopleaseduo.dto.FeedDetailResponseDto;
 import com.sparta.duopleaseduo.dto.FeedFormDto;
 import com.sparta.duopleaseduo.dto.FeedListDto;
-import com.sparta.duopleaseduo.dto.UserFeedListDto;
+import com.sparta.duopleaseduo.dto.UserFeedListResponseDto;
 import com.sparta.duopleaseduo.entity.Feed;
 import com.sparta.duopleaseduo.entity.User;
 import com.sparta.duopleaseduo.jwt.JwtUtil;
@@ -12,7 +13,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,9 +25,7 @@ public class FeedService {
 
     public Long createFeed(FeedFormDto feedFormDto, HttpServletRequest request) {
         String email = jwtUtil.validateTokenAndGetUserName(request);
-
         User user = getUser(email);
-
         Feed feed = new Feed(user, feedFormDto.getTitle(), feedFormDto.getContents());
 
         feedRepository.save(feed);
@@ -57,17 +55,30 @@ public class FeedService {
         feedRepository.delete(feed);
     }
 
-    public UserFeedListDto getUserFeedList(Long id, HttpServletRequest request) {
+    public UserFeedListResponseDto getUserFeedList(Long id, HttpServletRequest request) {
         String email = jwtUtil.validateTokenAndGetUserName(request);
-        User user = userRepository.findById(id).orElseThrow(() -> new IllegalStateException("해당 유저를 찾지 못했습니다."));
-        List<FeedListDto> feedList = feedRepository.findAllByUser(user).stream().map(FeedListDto::new).toList();
+        User user = userRepository.findById(id).orElseThrow(
+                () -> new IllegalStateException("해당 유저를 찾지 못했습니다."));
+        List<FeedListDto> feedList = feedRepository.findAllByUser(user)
+                .stream()
+                .map(FeedListDto::new)
+                .toList();
 
-        return new UserFeedListDto(user.getUsername(), user.getIntroduce(), feedList);
+        return new UserFeedListResponseDto(user.getUsername(), user.getIntroduce(), feedList);
     }
 
 
     public List<FeedListDto> getMainFeedList() {
         return feedRepository.findAll().stream().map(FeedListDto::new).toList();
+    }
+
+    public FeedDetailResponseDto getFeedDetail(Long id) {
+        Feed feed = getFeed(id);
+        /*
+        TODO : 1. feed와 같은 값인 Commnet리스트 가져오기
+               2. feedLike가져오기
+         */
+        return null;
     }
 
     private Feed getFeed(Long id) {
@@ -84,5 +95,6 @@ public class FeedService {
             throw new IllegalStateException(s);
         }
     }
+
 
 }
