@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class CommentService {
-    @Autowired
+
     private final CommentRepository commentRepository;
 
     private CommentResponseDto commentResponseDto;
