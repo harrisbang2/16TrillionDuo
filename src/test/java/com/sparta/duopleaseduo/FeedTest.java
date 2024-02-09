@@ -35,13 +35,13 @@ class FeedTest {
     @Rollback(value = false)
     void createFeed(){
 //        User user = new User("user1@naver.com", "0000", "user1", "user1입니다");
-//        userRepository.save(user);
+//       userRepository.save(user);
 
         User user = userRepository.findById(1L).orElseThrow(()
                 -> new IllegalStateException("해당 유저를 찾을 수 없습니다.")
         );
 
-        Feed feed = new Feed(user, "title", "content");
+        Feed feed = new Feed(user, "title2", "content");
         Feed save = feedRepository.save(feed);
 
         Assertions.assertEquals(feed, save);
@@ -115,7 +115,7 @@ class FeedTest {
         commentRequestDto.setUser(user);
         Comment comment = new Comment(commentRequestDto);
 
-         commentRepository.save(comment);
+        commentRepository.save(comment);
     }
 
     @Test

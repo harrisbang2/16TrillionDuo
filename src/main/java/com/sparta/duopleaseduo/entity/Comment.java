@@ -10,7 +10,6 @@ import org.hibernate.annotations.OnDeleteAction;
 @Entity
 @Getter
 @Table(name = "comment")
-
 @NoArgsConstructor
 public class Comment { //extends Timestamped
 
