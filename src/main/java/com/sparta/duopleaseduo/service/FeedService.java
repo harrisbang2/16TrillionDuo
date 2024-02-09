@@ -1,5 +1,6 @@
 package com.sparta.duopleaseduo.service;
 
+import com.sparta.duopleaseduo.dto.response.CommentResponseDto;
 import com.sparta.duopleaseduo.dto.response.FeedDetailResponseDto;
 import com.sparta.duopleaseduo.dto.request.FeedFormDto;
 import com.sparta.duopleaseduo.dto.response.FeedListDto;
@@ -11,6 +12,7 @@ import com.sparta.duopleaseduo.repository.CommentRepository;
 import com.sparta.duopleaseduo.repository.FeedRepository;
 import com.sparta.duopleaseduo.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +37,7 @@ public class FeedService {
         return feed.getId();
     }
 
+    @Transactional
     public Long updateFeed(Long id, FeedFormDto feedFormDto, HttpServletRequest request) {
         String email = jwtUtil.validateTokenAndGetUserName(request);
         User user = getUser(email);
@@ -79,15 +82,15 @@ public class FeedService {
     public FeedDetailResponseDto getFeedDetail(Long id) {
         Feed feed = getFeed(id);
 
-        commentRepository.findAllByFeed(feed);
+        List<CommentResponseDto> comments = commentRepository.findAllByFeed(feed)
+                .stream()
+                .map(CommentResponseDto::new).toList();
         /*
         TODO : 1. feed와 같은 값인 Commnet리스트 가져오기
                2. feedLike가져오기
          */
         return null;
     }
-
-
 
 
     private Feed getFeed(Long id) {
@@ -99,8 +102,9 @@ public class FeedService {
         return userRepository.findByUsername(userName).orElseThrow(()
                 -> new IllegalStateException("해당 유저를 찾을 수 없습니다."));
     }
+
     private void validateUser(User user, Feed feed, String s) {
-         if (user != feed.getUser()) {
+        if (user != feed.getUser()) {
             throw new IllegalStateException(s);
         }
     }

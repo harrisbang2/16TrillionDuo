@@ -111,8 +111,6 @@ class FeedTest {
         );
         CommentRequestDto commentRequestDto = new CommentRequestDto();
         commentRequestDto.setComment("hello");
-        commentRequestDto.setFeed(feed);
-        commentRequestDto.setUser(user);
         Comment comment = new Comment(commentRequestDto);
 
         commentRepository.save(comment);
