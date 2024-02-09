@@ -4,6 +4,7 @@ import com.sparta.duopleaseduo.dto.request.CommentRequestDto;
 import com.sparta.duopleaseduo.service.CommentService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,18 +19,18 @@ import static org.hibernate.query.sqm.tree.SqmNode.log;
 @RestController
 @RequiredArgsConstructor
 public class CommentController {
-
+    @Autowired
     private CommentService service;
     /// add comments
-    @PostMapping("/comment/create")
-    public ResponseEntity<?> CreateComment(@RequestBody CommentRequestDto requestDto, HttpServletRequest request, BindingResult bindingResult) {
+    @PostMapping("/comment/create/{feedId}")
+    public ResponseEntity<?> CreateComment(@RequestBody CommentRequestDto requestDto,@PathVariable(name="feedId") Long feed_id, HttpServletRequest request, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             log.info("댓글 작성 오류");
             return ResponseEntity.badRequest()
                     .body(createErrorMessages(bindingResult));
         }
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(service.createComment(requestDto,request));
+                .body(service.createComment(requestDto,feed_id,request));
     }
 
     /// get comments
