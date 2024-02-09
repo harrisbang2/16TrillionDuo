@@ -18,11 +18,12 @@ import static org.hibernate.query.sqm.tree.SqmNode.log;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/comments")
 public class CommentController {
     @Autowired
     private CommentService service;
     /// add comments
-    @PostMapping("/comment/create/{feedId}")
+    @PostMapping("/create/{feedId}")
     public ResponseEntity<?> CreateComment(@RequestBody CommentRequestDto requestDto,@PathVariable(name="feedId") Long feed_id, HttpServletRequest request, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             log.info("댓글 작성 오류");
@@ -39,7 +40,7 @@ public class CommentController {
 //        return service.getComments(id);
 //    }
     ///
-    @PatchMapping("/comment/{commentId}")
+    @PatchMapping("/{commentId}")
     public ResponseEntity<?> updateComment(@PathVariable(name = "commentId") Long id, CommentRequestDto requestDt,HttpServletRequest request,BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             log.info("댓글 수정 오류");
@@ -50,7 +51,7 @@ public class CommentController {
                 .body(service.updateComment(id,requestDt,request));
     }
     // deleting the item.
-    @DeleteMapping("/comment/{commentId}")
+    @DeleteMapping("/{commentId}")
     public ResponseEntity<?> deleteComment(@PathVariable(name = "commentId") Long id,HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(service.deleteComment(id,request));
