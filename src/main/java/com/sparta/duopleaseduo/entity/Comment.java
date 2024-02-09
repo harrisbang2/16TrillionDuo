@@ -11,7 +11,7 @@ import org.hibernate.annotations.OnDeleteAction;
 @Getter
 @Table(name = "comment")
 @NoArgsConstructor
-public class Comment { //extends Timestamped
+public class Comment extends Timestamped{ //extends Timestamped
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,10 +29,14 @@ public class Comment { //extends Timestamped
     private Feed feed;
 
     public Comment(CommentRequestDto requestDto) {
-        this.user = requestDto.getUser();
         this.comment = requestDto.getComment();
-        this.feed = requestDto.getFeed();
     }
+    public Comment(CommentRequestDto requestDto,User user, Feed feed) {
+        this.comment = requestDto.getComment();
+        this.user = user;
+        this.feed = feed;
+    }
+
 
     public void update(CommentRequestDto requestDto) {
         this.comment = requestDto.getComment();

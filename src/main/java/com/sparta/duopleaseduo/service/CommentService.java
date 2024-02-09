@@ -4,66 +4,78 @@ import com.sparta.duopleaseduo.dto.request.CommentRequestDto;
 import com.sparta.duopleaseduo.dto.response.CommentResponseDto;
 import com.sparta.duopleaseduo.entity.Comment;
 
+import com.sparta.duopleaseduo.entity.Feed;
+import com.sparta.duopleaseduo.entity.User;
+import com.sparta.duopleaseduo.jwt.JwtUtil;
 import com.sparta.duopleaseduo.repository.CommentRepository;
+import com.sparta.duopleaseduo.repository.FeedRepository;
+import com.sparta.duopleaseduo.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
 public class CommentService {
 
     private final CommentRepository commentRepository;
+    private final UserRepository userRepository;
+    private final FeedRepository feedRepository;
 
     private CommentResponseDto commentResponseDto;
 
-    private  String tokenHeader;
+    private JwtUtil jwtUtil;
 
     // 추가
-    public CommentResponseDto createComment(CommentRequestDto requestDto,HttpServletRequest request) { /// 유저랑 Feed 추가할 예정
+    public CommentResponseDto createComment(CommentRequestDto requestDto,Long id,HttpServletRequest request) { /// 유저랑 Feed 추가할 예정
         Comment comment;
         Comment savecomment;
-        //tokenHeader = request.getHeader("Authorization");
+        //System.out.println(jwtUtil.validateTokenAndGetUserName(request));
         try {
-            comment = new Comment(requestDto); // user feed 추가 예정
+            // !!!!!!!!!!!!!!!!!! 테스트 를 위해 한 주석입니다.
+            //User user = userRepository.findByEmail(jwtUtil.validateTokenAndGetUserName(request)).orElseThrow(() -> new NoSuchElementException("회원이 아닙니다."));
+             User user = userRepository.findById(1L).orElseThrow(()->new NoSuchElementException("그런 유저 없어요"));
+             Feed feed = feedRepository.findById(id).orElseThrow(()->new NoSuchElementException("그런 feed 없어요"));
+            //
+            comment = new Comment(requestDto, user, feed); // user feed 추가 예정
             savecomment = commentRepository.save(comment);
         }catch (Exception e){
-             commentResponseDto = new CommentResponseDto();
-            return commentResponseDto;
+             throw new RuntimeException("저장에 오류사 생겼습니다.");
         }
         // DB 저장
         // Entity -> ResponseDto
          commentResponseDto = new CommentResponseDto(savecomment);
         return commentResponseDto;
     }
-    // 조회
-//    public List<CommentResponseDto> getComments(Long id) { /// 유저랑 Feed 추가할 예정
-//         return null;
-//    }
+
+
 ///// 수정
     public CommentResponseDto updateComment(Long id, CommentRequestDto requestDto, HttpServletRequest request) {  /// 유저랑 Feed 추가할 예정 (User user , Feed feed)
         //  DB에 존재하는지 확인
         // 유저 확인.
         Comment comment;
-        //tokenHeader = request.getHeader("Authorization");
+        User user;
         try {
             comment = findComment(id);
+            // !!!!!!!!!!!!!!!!!! 테스트 를 위해 한 주석입니다. !!!!!!!!!!
+            //user = userRepository.findByEmail(jwtUtil.validateTokenAndGetUserName(request)).orElseThrow(() -> new NoSuchElementException("회원이 아닙니다."));
+            user = userRepository.findById(1L).orElseThrow(()->new NoSuchElementException("그런 유저 없어요"));
         }catch (Exception e){
-            System.out.println("updateComment 에 없는 아이디 입니다");
-            return  commentResponseDto;
+            throw new NoSuchElementException("updateComment 에 없는 Comment 아이디 입니다");
         }
-//        if(comment.getUser().getId().equals(user.getID) && comment.getFeed().getId().equals(feed.getID){
-//            //  내용 수정
-//            comment.update(requestDto);
-//        }
-//        else {
-//            throw new IllegalStateException("유저가 다릅니다!!!!");
-//        }
+        // 유저 검사
+        // Feed 검사도 할가 했지만 뺏습니다 시간 지연을 최소한 으로 하기 위해서 그냥 comment id 랑 user id 로 했습니다
+        if(!comment.getUser().getId().equals(user.getId())){
+            throw new IllegalStateException("유저가 다릅니다!!!!");
+        }
+        // 업데이트
         try{
             comment.update(requestDto);
             commentRepository.save(comment);
         } catch (Exception e){
-            System.out.println("updateComment 에서 오류");
+            throw new RuntimeException("updateComment 에서 오류");
         }
         commentResponseDto=new CommentResponseDto(comment);
         return commentResponseDto;
@@ -71,16 +83,21 @@ public class CommentService {
 
     /// 삭제
     public CommentResponseDto deleteComment(Long id, HttpServletRequest request) { /// 유저랑 Feed 추가할 예정 (User user , Feed feed)
-
-        Comment comment = findComment(id);
-//      // 유저 확인.
-//        if(comment.getUser().getId().equals(user.getID) && comment.getFeed().getId().equals(feed.getID){
-//            // memo 삭제
-//            commentRepository.delete(comment);
-//        }
-//        else {
-//            throw new IllegalStateException("삐빅 ! 유저 혹은 feed 가 다릅니다!!!!");
-//        }
+        Comment comment;
+        User user;
+        //
+        try {
+            comment = findComment(id);
+            user = userRepository.findById(1L).orElseThrow(() -> new NoSuchElementException("deleteComment 유저 검색 실패"));
+        }catch (Exception e){
+            throw new NoSuchElementException("deleteComment 에 없는 Comment 입니다");
+        }
+        // 유저 확인.
+        // Feed 검사도 할가 했지만 뺏습니다 시간 지연을 최소한 으로 하기 위해서 그냥 comment id 랑 user id 로 했습니다
+        if(!comment.getUser().getId().equals(user.getId())){
+            throw new IllegalStateException("유저가 다릅니다!!!!");
+        }
+        // 삭제 진행
         try{
             commentRepository.delete(comment);
         } catch (Exception e){
@@ -91,6 +108,6 @@ public class CommentService {
     }
 
     private Comment findComment(Long id) {
-        return commentRepository.findById(id).orElseThrow(()-> new NullPointerException("그런 유저는 없어요"));
+        return commentRepository.findById(id).orElseThrow(()-> new NullPointerException("findComment 유저 검색 실패"));
     }
 }
