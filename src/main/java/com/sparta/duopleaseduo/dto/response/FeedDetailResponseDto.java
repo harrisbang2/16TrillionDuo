@@ -11,12 +11,12 @@ public class FeedDetailResponseDto {
     private String userName;
     private String title;
     private String contents;
-    private Long likeCount;
+    private int likeCount;
     private LocalDateTime createdAt;
 
     private List<CommentResponseDto> comments;
 
-    public FeedDetailResponseDto(String userName, String title, String contents, Long likeCount, LocalDateTime createdAt, List<CommentResponseDto> comments) {
+    public FeedDetailResponseDto(String userName, String title, String contents, int likeCount, LocalDateTime createdAt, List<CommentResponseDto> comments) {
         this.userName = userName;
         this.title = title;
         this.contents = contents;

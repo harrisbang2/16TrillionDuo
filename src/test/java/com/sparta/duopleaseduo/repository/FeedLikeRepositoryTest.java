@@ -29,7 +29,14 @@ class FeedLikeRepositoryTest {
     @Rollback(value = false)
     void save(){
         User user = userRepository.findById(1L).orElseThrow();
-        Feed feed = feedRepository.findById(2L).orElseThrow();
+        Feed feed = feedRepository.findById(3L).orElseThrow();
+
+        if(feed.isUserMatch(user)){
+            throw new IllegalStateException("중복 아이디가 있습니다.");
+        }
+
+        boolean feedLikeCheck = feedLikeRepository.existsByFeedAndUser(feed, user);
+        System.out.println("데이터 : " + feedLikeCheck);
 
         feedLikeRepository.save(new FeedLike(user, feed));
     }
