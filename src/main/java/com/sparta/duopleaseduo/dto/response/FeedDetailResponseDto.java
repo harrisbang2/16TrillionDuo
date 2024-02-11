@@ -3,6 +3,7 @@ package com.sparta.duopleaseduo.dto.response;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class FeedDetailResponseDto {
@@ -10,11 +11,17 @@ public class FeedDetailResponseDto {
     private String userName;
     private String title;
     private String contents;
-    /*
-    Todo : Type(List) Comment Response dto 반환,
-           CommentResponseDto - username, content, createAt, commentListCount
-     */
-    private Long likeCount;
+    private int likeCount;
     private LocalDateTime createdAt;
 
+    private List<CommentResponseDto> comments;
+
+    public FeedDetailResponseDto(String userName, String title, String contents, int likeCount, LocalDateTime createdAt, List<CommentResponseDto> comments) {
+        this.userName = userName;
+        this.title = title;
+        this.contents = contents;
+        this.likeCount = likeCount;
+        this.createdAt = createdAt;
+        this.comments = comments;
+    }
 }

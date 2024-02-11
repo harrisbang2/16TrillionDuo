@@ -19,4 +19,9 @@ public class FeedLike {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "feed_id", nullable = false)
     private Feed feed;
+
+    public FeedLike(User user, Feed feed) {
+        this.user = user;
+        this.feed = feed;
+    }
 }
