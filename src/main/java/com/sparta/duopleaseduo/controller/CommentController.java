@@ -74,7 +74,7 @@ public class CommentController {
                 .body(likeService.createComment(commentId,request));
     }
 
-    @DeleteMapping("/like/{{commentId}")
+    @DeleteMapping("/like/{commentId}")
     private ResponseEntity<?> deleteLike(@PathVariable(name ="commentId") Long commentId,HttpServletRequest request){
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(likeService.deleteComment(commentId,request));
