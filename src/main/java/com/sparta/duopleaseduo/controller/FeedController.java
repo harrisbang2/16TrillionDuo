@@ -8,6 +8,7 @@ import com.sparta.duopleaseduo.dto.response.UserFeedListResponseDto;
 import com.sparta.duopleaseduo.service.FeedService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,8 +20,7 @@ import java.util.List;
 public class FeedController {
     private final FeedService feedService;
 
-
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity<Long> createFeed(@RequestBody FeedFormDto feedFormDto, HttpServletRequest request) {
         Long feedId = feedService.createFeed(feedFormDto, request);
 
@@ -28,40 +28,45 @@ public class FeedController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Long> updateFeed(@PathVariable Long id, @RequestBody FeedFormDto feedFormDto, HttpServletRequest request){
+    public ResponseEntity<Long> updateFeed(@PathVariable Long id, @RequestBody FeedFormDto feedFormDto, HttpServletRequest request) {
         Long feedId = feedService.updateFeed(id, feedFormDto, request);
 
         return ResponseEntity.ok(feedId);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteFeed(@PathVariable Long id, HttpServletRequest request){
+    public ResponseEntity<String> deleteFeed(@PathVariable Long id, HttpServletRequest request) {
         feedService.deleteFeed(id, request);
 
         return ResponseEntity.ok("OK");
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserFeedListResponseDto> getFeedList(@PathVariable Long id, HttpServletRequest request){
+    public ResponseEntity<UserFeedListResponseDto> getFeedList(@PathVariable Long id, HttpServletRequest request) {
         UserFeedListResponseDto feedListDto = feedService.getUserFeedList(id, request);
 
         return ResponseEntity.ok(feedListDto);
     }
 
-
-    @GetMapping("")
-    public ResponseEntity<List<FeedListDto>> getMainFeedList(){
+    @GetMapping
+    public ResponseEntity<List<FeedListDto>> getMainFeedList() {
         List<FeedListDto> feedList = feedService.getMainFeedList();
 
         return ResponseEntity.ok(feedList);
     }
 
     @GetMapping("/comment/{id}")
-    public ResponseEntity<FeedDetailResponseDto> getFeedDetail(@PathVariable Long id){
+    public ResponseEntity<FeedDetailResponseDto> getFeedDetail(@PathVariable Long id) {
         FeedDetailResponseDto feedDetailResponseDto = feedService.getFeedDetail(id);
 
         return ResponseEntity.ok(feedDetailResponseDto);
     }
 
+    @PostMapping("/like/{id}")
+    public ResponseEntity<String> likeFeed(@PathVariable Long id, HttpServletRequest request) {
+        feedService.likeFeed(id, request);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("");
+    }
 
 }

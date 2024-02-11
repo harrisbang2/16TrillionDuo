@@ -50,7 +50,6 @@ public class UserController {
                 .header(HttpHeaders.AUTHORIZATION, jwtUtil.createToken(requestDto.getEmail()))
                 .body(responseDto);
     }
-
     @PatchMapping()
     public ResponseEntity<UserResponseDto> updateUser(@RequestBody UpdateUserRequestDto requestDto, HttpServletRequest request) {
         log.info("updateUser Controller");

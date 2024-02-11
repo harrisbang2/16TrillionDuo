@@ -35,4 +35,8 @@ public class Feed extends Timestamped{
         this.title = title;
         this.content = content;
     }
+
+    public boolean isUserMatch(User user){
+        return this.user.equals(user);
+    }
 }
