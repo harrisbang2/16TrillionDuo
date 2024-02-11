@@ -2,14 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="css/login.css">
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
     <title>Title</title>
+    //
 </head>
 <body>
 <h2>Weekly Coding Challenge #1: Sign in/up Form</h2>
 <div class="container" id="container">
     <div class="form-container sign-up-container">
-        <form action="#">
+        <form>
             <h1>Create Account</h1>
             <div class="social-container">
                 <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
@@ -17,14 +19,14 @@
                 <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
             </div>
             <span>or use your email for registration</span>
-            <input type="text" placeholder="Name" />
-            <input type="email" placeholder="Email" />
-            <input type="password" placeholder="Password" />
-            <button>Sign Up</button>
+            <input type="text" placeholder="Name" id="signUpName"/>
+            <input type="text" placeholder="Email" id="signUpEmail"/>
+            <input type="text" placeholder="Password" id="signUpPassword"/>
+            <button onclick="signUp()">Sign Up</button>
         </form>
     </div>
     <div class="form-container sign-in-container">
-        <form action="#">
+        <form>
             <h1>Sign in</h1>
             <div class="social-container">
                 <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
@@ -32,11 +34,11 @@
                 <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
             </div>
             <span>or use your account</span>
-            <input type="email" placeholder="Email" />
-            <input type="password" placeholder="Password" />
+            <input type="text" placeholder="Email" id="signInEmail"/>
+            <input type="text" placeholder="Password" id="signInPassword"/>
             <a href="#">Forgot your password?</a>
-            <button>Sign In</button>
-        </form>
+            <button onclick="signIn()">Sign In</button>
+        </form>>
     </div>
     <div class="overlay-container">
         <div class="overlay">
@@ -53,7 +55,7 @@
         </div>
     </div>
 </div>
-<script src="login.js">
+<script src="css/login.js">
 
 </script>
 <footer>
