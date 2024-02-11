@@ -36,6 +36,7 @@ public class CommentLikeService {
          return true;
     }
 
+
     public boolean deleteComment(Long commentId, HttpServletRequest request) {
         String username =jwtUtil.validateTokenAndGetUserName(request);
         user = userRepository.findByUsername(username).orElseThrow(()-> new NoSuchElementException("해당 유저는 없습니다"));
