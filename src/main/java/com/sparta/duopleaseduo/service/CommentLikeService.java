@@ -20,13 +20,13 @@ public class CommentLikeService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
-    private User user;
-    private Comment comment;
+
+
 
     public boolean createComment(Long commentId, HttpServletRequest request) {
          String username =jwtUtil.validateTokenAndGetUserName(request);
-         user = userRepository.findByUsername(username).orElseThrow(()-> new NoSuchElementException("해당 유저는 없습니다"));
-         comment = commentRepository.findById(commentId).orElseThrow(()-> new NoSuchElementException("해당 댓글은 없습니다"));
+         User user = userRepository.findByUsername(username).orElseThrow(()-> new NoSuchElementException("해당 유저는 없습니다"));
+         Comment comment = commentRepository.findById(commentId).orElseThrow(()-> new NoSuchElementException("해당 댓글은 없습니다"));
          try{
              CommentLike commentLike = new CommentLike(user,comment);
              commentLikeRepository.save(commentLike);
@@ -39,8 +39,8 @@ public class CommentLikeService {
 
     public boolean deleteComment(Long commentId, HttpServletRequest request) {
         String username =jwtUtil.validateTokenAndGetUserName(request);
-        user = userRepository.findByUsername(username).orElseThrow(()-> new NoSuchElementException("해당 유저는 없습니다"));
-        comment = commentRepository.findById(commentId).orElseThrow(()-> new NoSuchElementException("해당 댓글은 없습니다"));
+        User user = userRepository.findByUsername(username).orElseThrow(()-> new NoSuchElementException("해당 유저는 없습니다"));
+        Comment comment = commentRepository.findById(commentId).orElseThrow(()-> new NoSuchElementException("해당 댓글은 없습니다"));
         CommentLike commentLike;
         try{
             commentLike = commentLikeRepository.findByUserAndComment(user,comment);
