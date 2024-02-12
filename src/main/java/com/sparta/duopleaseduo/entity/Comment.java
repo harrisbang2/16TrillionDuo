@@ -2,6 +2,7 @@ package com.sparta.duopleaseduo.entity;
 
 import com.sparta.duopleaseduo.dto.request.CommentRequestDto;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
@@ -17,13 +18,16 @@ public class Comment extends Timestamped{ //extends Timestamped
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "comment", nullable = false)
+    @NotNull
     private String comment;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @NotNull
     @JoinColumn(name = "user_id")
     private User user;
-    // 유저 엔티티 아직 안적어 그런듯
+
     @ManyToOne(fetch = FetchType.LAZY)
+    @NotNull
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "feed_id")
     private Feed feed;
@@ -36,7 +40,6 @@ public class Comment extends Timestamped{ //extends Timestamped
         this.user = user;
         this.feed = feed;
     }
-
 
     public void update(CommentRequestDto requestDto) {
         this.comment = requestDto.getComment();
