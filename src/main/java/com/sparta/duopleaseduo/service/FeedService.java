@@ -52,7 +52,6 @@ public class FeedService {
     @Transactional(readOnly = true)
     public FeedDetailResponseDto getFeedDetail(Long id) {
         Feed feed = getFeed(id);
-
         List<CommentResponseDto> comments = commentRepository.findAllByFeed(feed)
                 .stream()
                 .map(CommentResponseDto::new).toList();
@@ -111,6 +110,19 @@ public class FeedService {
         feedLikeRepository.save(new FeedLike(user, feed));
     }
 
+
+    public void cancelLikeFeed(Long id, HttpServletRequest request) {
+        String email = jwtUtil.validateTokenAndGetUserName(request);
+        User user = getUser(email);
+        Feed feed = getFeed(id);
+
+        FeedLike feedLike = feedLikeRepository.findByUserAndFeed(user, feed).orElseThrow(
+                () -> new IllegalStateException("해당 글에 좋아요를 누르지 않았습니다.")
+        );
+
+        feedLikeRepository.delete(feedLike);
+    }
+
     private Feed getFeed(Long id) {
         return feedRepository.findById(id).orElseThrow(
                 () -> new IllegalStateException("해당 피드를 찾지 못했습니다."));
@@ -136,4 +148,5 @@ public class FeedService {
             throw new IllegalStateException("좋아요는 한 번만 누를 수 있습니다.");
         }
     }
+
 }
