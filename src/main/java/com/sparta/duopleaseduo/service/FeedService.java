@@ -6,6 +6,7 @@ import com.sparta.duopleaseduo.entity.Feed;
 import com.sparta.duopleaseduo.entity.FeedLike;
 import com.sparta.duopleaseduo.entity.RiotUser;
 import com.sparta.duopleaseduo.entity.User;
+import com.sparta.duopleaseduo.exception.feed.EntityNotFoundException;
 import com.sparta.duopleaseduo.jwt.JwtUtil;
 import com.sparta.duopleaseduo.repository.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,22 +28,22 @@ public class FeedService {
     private final JwtUtil jwtUtil;
 
     @Transactional(readOnly = true)
-    public UserFeedListResponseDto getUserFeedList(Long id, HttpServletRequest request) {
+    public UserFeedResponseDto getUserFeedList(Long id, HttpServletRequest request) {
         String email = jwtUtil.validateTokenAndGetUserName(request);
         User user = userRepository.findById(id).orElseThrow(
-                () -> new IllegalStateException("해당 유저를 찾지 못했습니다."));
+                () -> new EntityNotFoundException("해당 유저를 찾지 못했습니다."));
 
-        List<FeedListDto> feedList = feedRepository.findAllByUser(user)
+        List<FeedFormDto> feedList = feedRepository.findAllByUser(user)
                 .stream()
-                .map(FeedListDto::new)
+                .map(FeedFormDto::new)
                 .toList();
 
-        return new UserFeedListResponseDto(user.getUsername(), user.getIntroduce(), feedList);
+        return new UserFeedResponseDto(user.getUsername(), user.getIntroduce(), feedList);
     }
 
     @Transactional(readOnly = true)
-    public List<FeedListDto> getMainFeedList() {
-        return feedRepository.findAll().stream().map(FeedListDto::new).toList();
+    public List<FeedFormDto> getMainFeedList() {
+        return feedRepository.findAll().stream().map(FeedFormDto::new).toList();
     }
 
     @Transactional(readOnly = true)
@@ -103,7 +104,7 @@ public class FeedService {
 
         validateUser(user, feed, "해당 글에는 좋아요를 누를 수 없습니다.");
         validateLike(user, feed);
-        //
+
         feedLikeRepository.save(new FeedLike(user, feed));
     }
 
@@ -114,7 +115,7 @@ public class FeedService {
         Feed feed = getFeed(id);
 
         FeedLike feedLike = feedLikeRepository.findByUserAndFeed(user, feed).orElseThrow(
-                () -> new IllegalStateException("해당 글에 좋아요를 누르지 않았습니다.")
+                () -> new EntityNotFoundException("해당 글에 좋아요를 누르지 않았습니다.")
         );
 
         feedLikeRepository.delete(feedLike);
@@ -122,12 +123,12 @@ public class FeedService {
 
     private Feed getFeed(Long id) {
         return feedRepository.findById(id).orElseThrow(
-                () -> new IllegalStateException("해당 피드를 찾지 못했습니다."));
+                () -> new EntityNotFoundException("해당 피드를 찾지 못했습니다."));
     }
 
     private User getUser(String email) {
         return userRepository.findByEmail(email).orElseThrow(()
-                -> new IllegalStateException("해당 유저를 찾을 수 없습니다."));
+                -> new EntityNotFoundException("해당 유저를 찾을 수 없습니다."));
     }
 
     private void validateUser(User user, Feed feed, String message) {

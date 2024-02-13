@@ -1,17 +1,18 @@
 package com.sparta.duopleaseduo.dto.response;
 
+import com.sparta.duopleaseduo.dto.request.FeedFormDto;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-public class UserFeedListResponseDto {
+public class UserFeedResponseDto {
     private String username;
     private String introduce;
-    private List<FeedListDto> feedList;
+    private List<FeedFormDto> feedList;
 
 
-    public UserFeedListResponseDto(String username, String introduce, List<FeedListDto> feedList) {
+    public UserFeedResponseDto(String username, String introduce, List<FeedFormDto> feedList) {
         this.username = username;
         this.introduce = introduce;
         this.feedList = feedList;
