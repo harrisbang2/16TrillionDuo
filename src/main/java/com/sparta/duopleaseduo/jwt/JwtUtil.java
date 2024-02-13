@@ -3,7 +3,9 @@ package com.sparta.duopleaseduo.jwt;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -19,8 +21,8 @@ import java.util.Date;
 public class JwtUtil {
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
-    public static final String BEARER_PREFIX = "Bearer ";
-    public final long TOKEN_TIME = 1000L * 60 * 10;
+    public static final String BEARER_PREFIX = "Bearer";
+    public final long TOKEN_TIME = 1000L * 60 * 30;
 
     @Value("${jwt.secret.key}")
     private String secretKey;
@@ -45,9 +47,17 @@ public class JwtUtil {
                         .compact();
     }
 
+    public HttpServletResponse setTokenInCookie(String email, HttpServletResponse response) {
+        Cookie cookie = new Cookie(AUTHORIZATION_HEADER, createToken(email));
+        cookie.setMaxAge(1800);
+        cookie.setPath("/");
+        response.addCookie(cookie);
+        return response;
+    }
+
     public String substringToken(String tokenValue) {
         if(StringUtils.hasText(tokenValue) && tokenValue.startsWith(BEARER_PREFIX)) {
-            return tokenValue.substring(7);
+            return tokenValue.substring(6);
         }
         log.info("Not Found Token");
         throw new NullPointerException("Not found Token");
@@ -74,16 +84,22 @@ public class JwtUtil {
     }
 
     public String getTokenFromRequest(HttpServletRequest request) {
-        String token = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if(token != null && token.startsWith(BEARER_PREFIX)) {
-            String jwtToken = substringToken(token);
-            return jwtToken;
+        Cookie[] cookies = request.getCookies();
+        if(cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals(AUTHORIZATION_HEADER)) { // 쿠키 이름에 따라 수정
+                    String token = cookie.getValue();
+                    if (token != null && token.startsWith(BEARER_PREFIX)) {
+                        return substringToken(token);
+                    }
+                }
+            }
         }
         return null;
     }
 
     public String validateTokenAndGetUserName(HttpServletRequest request) {
-        log.info("헤더에 토큰존재여부 검사");
+        log.info("쿠키에 토큰존재여부 검사");
         String token = getTokenFromRequest(request);
         if(token != null) {
             log.info("토큰 유효성 검사");
@@ -92,5 +108,13 @@ public class JwtUtil {
             };
         }
         throw new IllegalArgumentException("에러");
+    }
+
+    public HttpServletResponse expireToken(HttpServletResponse response) {
+        Cookie cookie = new Cookie(AUTHORIZATION_HEADER,"");
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+        response.addCookie(cookie);
+        return response;
     }
 }
