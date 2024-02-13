@@ -26,7 +26,11 @@ public class CommentLikeService {
     public boolean createComment(Long commentId, HttpServletRequest request) {
          String username =jwtUtil.validateTokenAndGetUserName(request);
          User user = userRepository.findByUsername(username).orElseThrow(()-> new NoSuchElementException("해당 유저는 없습니다"));
+
          Comment comment = commentRepository.findById(commentId).orElseThrow(()-> new NoSuchElementException("해당 댓글은 없습니다"));
+         if(commentLikeRepository.existsByUserAndComment(user,comment)){
+             throw new IllegalStateException("해당 댓글은 이미 좋아요 하셨습니다");
+         }
          try{
              CommentLike commentLike = new CommentLike(user,comment);
              commentLikeRepository.save(commentLike);
@@ -40,6 +44,7 @@ public class CommentLikeService {
     public boolean deleteComment(Long commentId, HttpServletRequest request) {
         String username =jwtUtil.validateTokenAndGetUserName(request);
         User user = userRepository.findByUsername(username).orElseThrow(()-> new NoSuchElementException("해당 유저는 없습니다"));
+
         Comment comment = commentRepository.findById(commentId).orElseThrow(()-> new NoSuchElementException("해당 댓글은 없습니다"));
         CommentLike commentLike;
         try{
