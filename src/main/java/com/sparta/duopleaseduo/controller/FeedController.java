@@ -3,8 +3,9 @@ package com.sparta.duopleaseduo.controller;
 
 import com.sparta.duopleaseduo.dto.request.FeedFormDto;
 import com.sparta.duopleaseduo.dto.response.FeedDetailResponseDto;
-import com.sparta.duopleaseduo.dto.response.UserFeedResponseDto;
+import com.sparta.duopleaseduo.dto.response.FeedListDto;
 import com.sparta.duopleaseduo.dto.response.RiotUserResponseDto;
+import com.sparta.duopleaseduo.dto.response.UserFeedListResponseDto;
 import com.sparta.duopleaseduo.service.FeedService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -46,20 +47,20 @@ public class FeedController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserFeedResponseDto> getUserFeedList(@PathVariable Long id, HttpServletRequest request) {
-        UserFeedResponseDto feedListDto = feedService.getUserFeedList(id, request);
+    public ResponseEntity<UserFeedListResponseDto> getUserFeedList(@PathVariable Long id, HttpServletRequest request) {
+        UserFeedListResponseDto feedListDto = feedService.getUserFeedList(id, request);
 
         return ResponseEntity.ok(feedListDto);
     }
 
     @GetMapping
-    public ResponseEntity<List<FeedFormDto>> getMainFeedList() {
-        List<FeedFormDto> feedList = feedService.getMainFeedList();
+    public ResponseEntity<List<FeedListDto>> getMainFeedList() {
+        List<FeedListDto> feedList = feedService.getMainFeedList();
 
         return ResponseEntity.ok(feedList);
     }
 
-    @GetMapping("/comment/{id}")
+    @GetMapping("/details/{id}")
     public ResponseEntity<FeedDetailResponseDto> getFeedDetail(@PathVariable Long id) {
         FeedDetailResponseDto feedDetailResponseDto = feedService.getFeedDetail(id);
 

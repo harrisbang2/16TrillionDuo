@@ -29,22 +29,21 @@ public class FeedService {
     private final JwtUtil jwtUtil;
 
     @Transactional(readOnly = true)
-    public UserFeedResponseDto getUserFeedList(Long id, HttpServletRequest request) {
-        String email = jwtUtil.validateTokenAndGetUserName(request);
+    public UserFeedListResponseDto getUserFeedList(Long id, HttpServletRequest request) {
         User user = userRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("해당 유저를 찾지 못했습니다."));
 
-        List<FeedFormDto> feedList = feedRepository.findAllByUser(user)
+        List<FeedListDto> feedList = feedRepository.findAllByUser(user)
                 .stream()
-                .map(FeedFormDto::new)
+                .map(FeedListDto::new)
                 .toList();
 
-        return new UserFeedResponseDto(user.getUsername(), user.getIntroduce(), feedList);
+        return new UserFeedListResponseDto(user, feedList);
     }
 
     @Transactional(readOnly = true)
-    public List<FeedFormDto> getMainFeedList() {
-        return feedRepository.findAll().stream().map(FeedFormDto::new).toList();
+    public List<FeedListDto> getMainFeedList() {
+        return feedRepository.findAll().stream().map(FeedListDto::new).toList();
     }
 
     @Transactional(readOnly = true)
@@ -55,14 +54,7 @@ public class FeedService {
                 .map(CommentResponseDto::new).toList();
         int count = feedLikeRepository.countByFeed(feed);
 
-        return new FeedDetailResponseDto(
-                feed.getUser().getUsername(),
-                feed.getTitle(),
-                feed.getContent(),
-                count,
-                feed.getCreateAt(),
-                comments
-        );
+        return new FeedDetailResponseDto(feed, count, comments);
     }
 
     public Long createFeed(FeedFormDto feedFormDto, RiotUserResponseDto riotUserInfo, HttpServletRequest request) {
@@ -105,7 +97,7 @@ public class FeedService {
 
         validateUser(user, feed, "해당 글에는 좋아요를 누를 수 없습니다.");
         validateLike(user, feed);
-
+        //
         feedLikeRepository.save(new FeedLike(user, feed));
     }
 
@@ -130,6 +122,7 @@ public class FeedService {
     private User getUser(String email) {
         return userRepository.findByEmail(email).orElseThrow(()
                 -> new EntityNotFoundException("해당 유저를 찾지 못했습니다."));
+
     }
 
     private void validateUser(User user, Feed feed, String message) {

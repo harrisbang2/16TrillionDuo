@@ -1,7 +1,8 @@
 package com.sparta.duopleaseduo;
 
 import com.sparta.duopleaseduo.dto.request.CommentRequestDto;
-import com.sparta.duopleaseduo.dto.response.UserFeedResponseDto;
+import com.sparta.duopleaseduo.dto.response.FeedListDto;
+import com.sparta.duopleaseduo.dto.response.UserFeedListResponseDto;
 import com.sparta.duopleaseduo.entity.Comment;
 import com.sparta.duopleaseduo.entity.Feed;
 import com.sparta.duopleaseduo.entity.User;
@@ -137,9 +138,9 @@ class FeedTest {
     void getUserFeedList(){
         User user = userRepository.findById(1L).orElseThrow(()  -> new IllegalStateException("해당 유저를 찾지 못했습니다."));
 
-        List<FeedFormDto> userFeeds = feedRepository.findAllByUser(user).stream().map(FeedFormDto::new).toList();
+        List<FeedListDto> userFeeds = feedRepository.findAllByUser(user).stream().map(FeedListDto::new).toList();
 
-        UserFeedResponseDto feedListDto = new UserFeedResponseDto(user.getUsername(), user.getIntroduce(), userFeeds);
+        UserFeedListResponseDto feedListDto = new UserFeedListResponseDto(user, userFeeds);
 
         System.out.println(feedListDto);
     }
@@ -149,7 +150,7 @@ class FeedTest {
     @DisplayName("메인 피드")
     @Rollback(value = false)
     void getMainFeedList(){
-        List<FeedFormDto> feedList = feedRepository.findAll().stream().map(FeedFormDto::new).toList();
+        List<FeedListDto> feedList = feedRepository.findAll().stream().map(FeedListDto::new).toList();
 
         System.out.println(feedList);
     }
