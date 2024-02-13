@@ -4,12 +4,13 @@ package com.sparta.duopleaseduo.controller;
 import com.sparta.duopleaseduo.dto.request.FeedFormDto;
 import com.sparta.duopleaseduo.dto.response.FeedDetailResponseDto;
 import com.sparta.duopleaseduo.dto.response.UserFeedResponseDto;
+import com.sparta.duopleaseduo.dto.response.RiotUserResponseDto;
 import com.sparta.duopleaseduo.service.FeedService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -18,10 +19,14 @@ import java.util.List;
 @RequestMapping("/feeds")
 public class FeedController {
     private final FeedService feedService;
+    private final String riotUri = "http://localhost:8080/riot/";
 
     @PostMapping
     public ResponseEntity<Long> createFeed(@RequestBody FeedFormDto feedFormDto, HttpServletRequest request) {
-        Long feedId = feedService.createFeed(feedFormDto, request);
+        RestTemplate restTemplate = new RestTemplate();
+        RiotUserResponseDto riotUserInfo = restTemplate.getForObject(riotUri+feedFormDto.getSummonerName(), RiotUserResponseDto.class);
+
+        Long feedId = feedService.createFeed(feedFormDto, riotUserInfo, request);
 
         return ResponseEntity.status(201).body(feedId);
     }

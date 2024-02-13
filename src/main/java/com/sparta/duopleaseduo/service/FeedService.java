@@ -1,18 +1,14 @@
 package com.sparta.duopleaseduo.service;
 
 import com.sparta.duopleaseduo.dto.request.FeedFormDto;
-import com.sparta.duopleaseduo.dto.response.CommentResponseDto;
-import com.sparta.duopleaseduo.dto.response.FeedDetailResponseDto;
-import com.sparta.duopleaseduo.dto.response.UserFeedResponseDto;
+import com.sparta.duopleaseduo.dto.response.*;
 import com.sparta.duopleaseduo.entity.Feed;
 import com.sparta.duopleaseduo.entity.FeedLike;
+import com.sparta.duopleaseduo.entity.RiotUser;
 import com.sparta.duopleaseduo.entity.User;
 import com.sparta.duopleaseduo.exception.feed.EntityNotFoundException;
 import com.sparta.duopleaseduo.jwt.JwtUtil;
-import com.sparta.duopleaseduo.repository.CommentRepository;
-import com.sparta.duopleaseduo.repository.FeedLikeRepository;
-import com.sparta.duopleaseduo.repository.FeedRepository;
-import com.sparta.duopleaseduo.repository.UserRepository;
+import com.sparta.duopleaseduo.repository.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,6 +22,7 @@ import java.util.List;
 public class FeedService {
     private final FeedRepository feedRepository;
     private final UserRepository userRepository;
+    private final RiotUserRepository riotUserRepository;
     private final CommentRepository commentRepository;
     private final FeedLikeRepository feedLikeRepository;
     private final JwtUtil jwtUtil;
@@ -67,11 +64,11 @@ public class FeedService {
         );
     }
 
-    public Long createFeed(FeedFormDto feedFormDto, HttpServletRequest request) {
+    public Long createFeed(FeedFormDto feedFormDto, RiotUserResponseDto riotUserInfo, HttpServletRequest request) {
         String email = jwtUtil.validateTokenAndGetUserName(request);
+        RiotUser savedRiotUser = riotUserRepository.save(new RiotUser(riotUserInfo));
         User user = getUser(email);
-        Feed feed = new Feed(user, feedFormDto.getTitle(), feedFormDto.getContents());
-
+        Feed feed = new Feed(user, feedFormDto.getTitle(), feedFormDto.getContents(), savedRiotUser);
         feedRepository.save(feed);
 
         return feed.getId();
