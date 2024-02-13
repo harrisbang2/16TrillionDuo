@@ -9,6 +9,7 @@ import com.sparta.duopleaseduo.entity.User;
 import com.sparta.duopleaseduo.jwt.JwtUtil;
 import com.sparta.duopleaseduo.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpRequest;
@@ -48,7 +49,7 @@ public class UserService {
     }
 
 
-    public UserResponseDto login(LoginRequestDto requestDto) {
+    public UserResponseDto login(LoginRequestDto requestDto, HttpServletResponse response) {
         User findUser = userRepository.findByEmail(requestDto.getEmail()).orElseThrow(
                 () -> new IllegalArgumentException("아이디, 비밀번호가 올바르지 않습니다.")
         );
@@ -57,6 +58,17 @@ public class UserService {
             throw new IllegalArgumentException("아이디, 비밀번호가 올바르지 않습니다.");
         }
         log.info("로그인 성공");
+        jwtUtil.setTokenInCookie(requestDto.getEmail(), response);
+        return new UserResponseDto(findUser);
+    }
+
+    public UserResponseDto logout(HttpServletRequest request, HttpServletResponse response) {
+        String userEmail = jwtUtil.validateTokenAndGetUserName(request);
+        User findUser = userRepository.findByEmail(userEmail).orElseThrow(
+                () -> new NoSuchElementException("회원이 아닙니다.")
+        );
+        jwtUtil.expireToken(response);
+        log.info("로그아웃 성공");
         return new UserResponseDto(findUser);
     }
 
@@ -86,4 +98,6 @@ public class UserService {
         findUser.updatePassword(requestDto);
         return new UserResponseDto(findUser);
     }
+
+
 }
