@@ -105,7 +105,8 @@ public class FeedService {
         User user = getUser(email);
         Feed feed = getFeed(id);
 
-        validateLike(feed, user);
+        validateUser(user, feed, "해당 글에는 좋아요를 누를 수 없습니다.");
+        validateLike(user, feed);
         //
         feedLikeRepository.save(new FeedLike(user, feed));
     }
@@ -134,17 +135,13 @@ public class FeedService {
     }
 
     private void validateUser(User user, Feed feed, String message) {
-        if (user != feed.getUser()) {
+        if (feed.isUserMatch(user)) {
             throw new IllegalStateException(message);
         }
     }
 
-    private void validateLike(Feed feed, User user) {
-        if (feed.isUserMatch(user)) {
-            throw new IllegalStateException("본인이 쓴 글에는 좋아요를 누를 수 없습니다.");
-        }
-
-        if(feedLikeRepository.existsByUserAndFeed(user, feed)){
+    private void validateLike(User user, Feed feed) {
+        if (feedLikeRepository.existsByUserAndFeed(user, feed)) {
             throw new IllegalStateException("좋아요는 한 번만 누를 수 있습니다.");
         }
     }
