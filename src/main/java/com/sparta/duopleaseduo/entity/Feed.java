@@ -25,10 +25,15 @@ public class Feed extends Timestamped{
     @Column(name = "content",nullable = false)
     private String content;
 
-    public Feed(User user, String title, String content) {
+    @OneToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "riotUser_id")
+    private RiotUser riotUser;
+
+    public Feed(User user, String title, String content, RiotUser riotUser) {
         this.user = user;
         this.title = title;
         this.content = content;
+        this.riotUser = riotUser;
     }
 
     public void update(String title, String content){
