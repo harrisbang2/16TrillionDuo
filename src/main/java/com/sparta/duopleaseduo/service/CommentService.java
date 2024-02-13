@@ -28,7 +28,6 @@ public class CommentService {
     private final FeedRepository feedRepository;
 
     private CommentResponseDto commentResponseDto;
-
     private JwtUtil jwtUtil;
 
     // 추가

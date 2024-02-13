@@ -9,4 +9,6 @@ public class FeedFormDto {
     private String title;
     @NotBlank(message = "내용을 적어주세요.")
     private String contents;
+    @NotBlank(message = "소환사명을 적어주세요.")
+    private String summonerName;
 }
