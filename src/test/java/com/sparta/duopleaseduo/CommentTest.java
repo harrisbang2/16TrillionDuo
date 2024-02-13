@@ -1,6 +1,11 @@
 package com.sparta.duopleaseduo;
 
 import com.sparta.duopleaseduo.dto.request.CommentRequestDto;
+import com.sparta.duopleaseduo.exception.commentexception.CommentCreateErrorException;
+import com.sparta.duopleaseduo.exception.commentexception.CommentException;
+import com.sparta.duopleaseduo.exception.commentexception.CommentUpdateFailException;
+import com.sparta.duopleaseduo.exception.commentexception.IncorrectUserException;
+import com.sparta.duopleaseduo.exception.userexception.NoSuchUserException;
 import com.sparta.duopleaseduo.service.CommentService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.DisplayName;
@@ -23,7 +28,7 @@ public class CommentTest {
     @Test
     @DisplayName("1차 캐시 : comment 저장")
     @Rollback(value = false)
-    void createComment(){
+    void createComment() throws CommentCreateErrorException {
         CommentRequestDto requestDto = new CommentRequestDto ();
         requestDto.setComment("1차 캐시 : comment 저장");
         service.createComment(requestDto,1L,request);
@@ -33,7 +38,7 @@ public class CommentTest {
     @Test
     @DisplayName("2차 캐시 : comment 변경")
     @Rollback(value = false)
-    void updateComment(){
+    void updateComment() throws CommentException, NoSuchUserException {
         CommentRequestDto requestDto = new CommentRequestDto ();
         requestDto.setComment("2차 캐시 : comment 변경");
         service.updateComment(1L,requestDto,request);
@@ -42,7 +47,7 @@ public class CommentTest {
     @Test
     @DisplayName("3차 캐시 : comment 삭제")
     @Rollback(value = false)
-    void deleteComment(){
+    void deleteComment() throws NoSuchUserException, CommentException {
         service.deleteComment(1L,request);
     }
     ////////////////////////////////////////////////////////////////////////////////
@@ -62,7 +67,7 @@ public class CommentTest {
     @Test
     @DisplayName("2차 캐시 : comment 변경")
     @Rollback(value = false)
-    void updateCommentFail(){
+    void updateCommentFail() throws CommentException, NoSuchUserException {
         CommentRequestDto requestDto = new CommentRequestDto ();
         requestDto.setComment("2차 캐시 : comment 변경");
         service.updateComment(3100L,requestDto,request);
@@ -71,7 +76,7 @@ public class CommentTest {
     @Test
     @DisplayName("3차 캐시 : comment 삭제")
     @Rollback(value = false)
-    void deleteCommentFail(){
+    void deleteCommentFail() throws NoSuchUserException, CommentException {
         service.deleteComment(900L,request);
     }
 

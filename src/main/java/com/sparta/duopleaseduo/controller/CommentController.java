@@ -1,6 +1,11 @@
 package com.sparta.duopleaseduo.controller;
 
 import com.sparta.duopleaseduo.dto.request.CommentRequestDto;
+import com.sparta.duopleaseduo.exception.commentexception.CommentCreateErrorException;
+import com.sparta.duopleaseduo.exception.commentexception.CommentException;
+import com.sparta.duopleaseduo.exception.commentexception.CommentUpdateFailException;
+import com.sparta.duopleaseduo.exception.commentexception.IncorrectUserException;
+import com.sparta.duopleaseduo.exception.userexception.NoSuchUserException;
 import com.sparta.duopleaseduo.service.CommentLikeService;
 import com.sparta.duopleaseduo.service.CommentService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,7 +31,7 @@ public class CommentController {
     private CommentLikeService likeService;
     /// add comments
     @PostMapping("/create/{feedId}")
-    public ResponseEntity<?> CreateComment(@RequestBody CommentRequestDto requestDto,@PathVariable(name="feedId") Long feed_id, HttpServletRequest request, BindingResult bindingResult) {
+    public ResponseEntity<?> CreateComment(@RequestBody CommentRequestDto requestDto,@PathVariable(name="feedId") Long feed_id, HttpServletRequest request, BindingResult bindingResult) throws CommentCreateErrorException {
         if(bindingResult.hasErrors()) {
             log.info("댓글 작성 오류");
             return ResponseEntity.badRequest()
@@ -43,7 +48,7 @@ public class CommentController {
 //    }
     ///
     @PatchMapping("/{commentId}")
-    public ResponseEntity<?> updateComment(@PathVariable(name = "commentId") Long id, CommentRequestDto requestDt,HttpServletRequest request,BindingResult bindingResult) {
+    public ResponseEntity<?> updateComment(@PathVariable(name = "commentId") Long id, CommentRequestDto requestDt,HttpServletRequest request,BindingResult bindingResult) throws CommentException, NoSuchUserException {
         if(bindingResult.hasErrors()) {
             log.info("댓글 수정 오류");
             return ResponseEntity.badRequest()
@@ -54,7 +59,7 @@ public class CommentController {
     }
     // deleting the item.
     @DeleteMapping("/{commentId}")
-    public ResponseEntity<?> deleteComment(@PathVariable(name = "commentId") Long id,HttpServletRequest request) {
+    public ResponseEntity<?> deleteComment(@PathVariable(name = "commentId") Long id,HttpServletRequest request) throws NoSuchUserException, CommentException {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(commentService.deleteComment(id,request));
     }
