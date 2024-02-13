@@ -6,7 +6,8 @@ import com.sparta.duopleaseduo.entity.Feed;
 import com.sparta.duopleaseduo.entity.FeedLike;
 import com.sparta.duopleaseduo.entity.RiotUser;
 import com.sparta.duopleaseduo.entity.User;
-import com.sparta.duopleaseduo.exception.feed.UserMatchException;
+import com.sparta.duopleaseduo.exception.feed.AlreadyLikedException;
+import com.sparta.duopleaseduo.exception.feed.UserNotMatchException;
 import com.sparta.duopleaseduo.jwt.JwtUtil;
 import com.sparta.duopleaseduo.repository.*;
 import jakarta.persistence.EntityNotFoundException;
@@ -127,13 +128,13 @@ public class FeedService {
 
     private void validateUser(User user, Feed feed, String message) {
         if (feed.isUserMatch(user)) {
-            throw new UserMatchException(message);
+            throw new UserNotMatchException(message);
         }
     }
 
     private void validateLike(User user, Feed feed) {
         if (feedLikeRepository.existsByUserAndFeed(user, feed)) {
-            throw new IllegalStateException("좋아요는 한 번만 누를 수 있습니다.");
+            throw new AlreadyLikedException("좋아요는 한 번만 누를 수 있습니다.");
         }
     }
 
