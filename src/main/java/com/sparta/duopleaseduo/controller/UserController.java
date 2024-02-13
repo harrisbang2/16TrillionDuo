@@ -8,6 +8,7 @@ import com.sparta.duopleaseduo.dto.response.UserResponseDto;
 import com.sparta.duopleaseduo.jwt.JwtUtil;
 import com.sparta.duopleaseduo.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,13 +45,19 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserResponseDto> login(@RequestBody LoginRequestDto requestDto) {
+    public ResponseEntity<UserResponseDto> login(@RequestBody LoginRequestDto requestDto, HttpServletResponse response) {
         log.info("login Controller");
-        UserResponseDto responseDto = userService.login(requestDto);
         return ResponseEntity.status(HttpStatus.OK)
-                .header(HttpHeaders.AUTHORIZATION, jwtUtil.createToken(requestDto.getEmail()))
-                .body(responseDto);
+                .body(userService.login(requestDto, response));
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<UserResponseDto> logout(HttpServletRequest request, HttpServletResponse response) {
+        log.info("logout Controller");
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(userService.logout(request, response));
+    }
+
     @PatchMapping()
     public ResponseEntity<UserResponseDto> updateUser(@RequestBody UpdateUserRequestDto requestDto, HttpServletRequest request) {
         log.info("updateUser Controller");
@@ -58,8 +66,15 @@ public class UserController {
     }
 
     @PatchMapping("/password")
-    public ResponseEntity<UserResponseDto> updatePassword(@RequestBody UpdatePasswordRequestDto requestDto, HttpServletRequest request) {
+    public ResponseEntity<?> updatePassword(@Valid @RequestBody UpdatePasswordRequestDto requestDto,
+                                                          HttpServletRequest request,
+                                                          BindingResult bindingResult) {
         log.info("updatePassword Controller");
+        if(bindingResult.hasErrors()) {
+            log.info("비밀번호 검증오류 발생");
+            return ResponseEntity.badRequest()
+                    .body(createErrorMessages(bindingResult));
+        }
         return ResponseEntity.status(HttpStatus.OK)
                 .body(userService.updatePassword(requestDto, request));
     }
