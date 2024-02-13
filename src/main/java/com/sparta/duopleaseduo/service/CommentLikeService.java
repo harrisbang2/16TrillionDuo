@@ -3,6 +3,10 @@ package com.sparta.duopleaseduo.service;
 import com.sparta.duopleaseduo.entity.Comment;
 import com.sparta.duopleaseduo.entity.CommentLike;
 import com.sparta.duopleaseduo.entity.User;
+import com.sparta.duopleaseduo.exception.commentexception.CommentException;
+import com.sparta.duopleaseduo.exception.commentexception.NoSuchCommentException;
+import com.sparta.duopleaseduo.exception.userexception.NoSuchUserException;
+import com.sparta.duopleaseduo.exception.userexception.UserException;
 import com.sparta.duopleaseduo.jwt.JwtUtil;
 import com.sparta.duopleaseduo.repository.CommentLikeRepository;
 import com.sparta.duopleaseduo.repository.CommentRepository;
@@ -23,11 +27,11 @@ public class CommentLikeService {
 
 
 
-    public boolean createComment(Long commentId, HttpServletRequest request) {
+    public boolean createComment(Long commentId, HttpServletRequest request) throws CommentException, UserException {
          String username =jwtUtil.validateTokenAndGetUserName(request);
-         User user = userRepository.findByUsername(username).orElseThrow(()-> new NoSuchElementException("해당 유저는 없습니다"));
+         User user = userRepository.findByUsername(username).orElseThrow(NoSuchUserException::new);
 
-         Comment comment = commentRepository.findById(commentId).orElseThrow(()-> new NoSuchElementException("해당 댓글은 없습니다"));
+         Comment comment = commentRepository.findById(commentId).orElseThrow(NoSuchCommentException::new);
          if(commentLikeRepository.existsByUserAndComment(user,comment)){
              throw new IllegalStateException("해당 댓글은 이미 좋아요 하셨습니다");
          }
@@ -41,11 +45,11 @@ public class CommentLikeService {
     }
 
 
-    public boolean deleteComment(Long commentId, HttpServletRequest request) {
+    public boolean deleteComment(Long commentId, HttpServletRequest request) throws CommentException, UserException {
         String username =jwtUtil.validateTokenAndGetUserName(request);
-        User user = userRepository.findByUsername(username).orElseThrow(()-> new NoSuchElementException("해당 유저는 없습니다"));
+        User user = userRepository.findByUsername(username).orElseThrow(NoSuchUserException::new);
 
-        Comment comment = commentRepository.findById(commentId).orElseThrow(()-> new NoSuchElementException("해당 댓글은 없습니다"));
+        Comment comment = commentRepository.findById(commentId).orElseThrow(NoSuchCommentException::new);
         CommentLike commentLike;
         try{
             commentLike = commentLikeRepository.findByUserAndComment(user,comment);

@@ -6,6 +6,7 @@ import com.sparta.duopleaseduo.exception.commentexception.CommentException;
 import com.sparta.duopleaseduo.exception.commentexception.CommentUpdateFailException;
 import com.sparta.duopleaseduo.exception.commentexception.IncorrectUserException;
 import com.sparta.duopleaseduo.exception.userexception.NoSuchUserException;
+import com.sparta.duopleaseduo.exception.userexception.UserException;
 import com.sparta.duopleaseduo.service.CommentLikeService;
 import com.sparta.duopleaseduo.service.CommentService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -48,7 +49,7 @@ public class CommentController {
 //    }
     ///
     @PatchMapping("/{commentId}")
-    public ResponseEntity<?> updateComment(@PathVariable(name = "commentId") Long id, CommentRequestDto requestDt,HttpServletRequest request,BindingResult bindingResult) throws CommentException, NoSuchUserException {
+    public ResponseEntity<?> updateComment(@PathVariable(name = "commentId") Long id, CommentRequestDto requestDt,HttpServletRequest request,BindingResult bindingResult) throws CommentException, UserException {
         if(bindingResult.hasErrors()) {
             log.info("댓글 수정 오류");
             return ResponseEntity.badRequest()
@@ -59,7 +60,7 @@ public class CommentController {
     }
     // deleting the item.
     @DeleteMapping("/{commentId}")
-    public ResponseEntity<?> deleteComment(@PathVariable(name = "commentId") Long id,HttpServletRequest request) throws NoSuchUserException, CommentException {
+    public ResponseEntity<?> deleteComment(@PathVariable(name = "commentId") Long id,HttpServletRequest request) throws UserException, CommentException {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(commentService.deleteComment(id,request));
     }
@@ -74,13 +75,13 @@ public class CommentController {
 
     // comment like
     @PostMapping("/like/{commentId}")
-    private ResponseEntity<?> addLike(@PathVariable(name ="commentId") Long commentId,HttpServletRequest request){
+    private ResponseEntity<?> addLike(@PathVariable(name ="commentId") Long commentId,HttpServletRequest request) throws UserException, CommentException {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(likeService.createComment(commentId,request));
     }
 
     @DeleteMapping("/like/{commentId}")
-    private ResponseEntity<?> deleteLike(@PathVariable(name ="commentId") Long commentId,HttpServletRequest request){
+    private ResponseEntity<?> deleteLike(@PathVariable(name ="commentId") Long commentId,HttpServletRequest request) throws UserException, CommentException {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(likeService.deleteComment(commentId,request));
     }

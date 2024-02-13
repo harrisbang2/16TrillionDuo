@@ -8,6 +8,7 @@ import com.sparta.duopleaseduo.entity.Feed;
 import com.sparta.duopleaseduo.entity.User;
 import com.sparta.duopleaseduo.exception.commentexception.*;
 import com.sparta.duopleaseduo.exception.userexception.NoSuchUserException;
+import com.sparta.duopleaseduo.exception.userexception.UserException;
 import com.sparta.duopleaseduo.jwt.JwtUtil;
 import com.sparta.duopleaseduo.repository.CommentRepository;
 import com.sparta.duopleaseduo.repository.FeedRepository;
@@ -54,7 +55,7 @@ public class CommentService {
 
 
 ///// 수정
-    public CommentResponseDto updateComment(Long id, CommentRequestDto requestDto, HttpServletRequest request) throws CommentException, NoSuchUserException {  /// 유저랑 Feed 추가할 예정 (User user , Feed feed)
+    public CommentResponseDto updateComment(Long id, CommentRequestDto requestDto, HttpServletRequest request) throws CommentException, UserException {  /// 유저랑 Feed 추가할 예정 (User user , Feed feed)
         //  DB에 존재하는지 확인
         // 유저 확인.
         Comment comment;
@@ -80,7 +81,7 @@ public class CommentService {
     }
 
     /// 삭제
-    public CommentResponseDto deleteComment(Long id, HttpServletRequest request) throws CommentException, NoSuchUserException { /// 유저랑 Feed 추가할 예정 (User user , Feed feed)
+    public CommentResponseDto deleteComment(Long id, HttpServletRequest request) throws CommentException, UserException { /// 유저랑 Feed 추가할 예정 (User user , Feed feed)
         Comment comment;
         User user;
         //

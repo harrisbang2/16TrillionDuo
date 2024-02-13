@@ -3,6 +3,12 @@ package com.sparta.duopleaseduo;
 import com.sparta.duopleaseduo.entity.Comment;
 import com.sparta.duopleaseduo.entity.CommentLike;
 import com.sparta.duopleaseduo.entity.User;
+import com.sparta.duopleaseduo.exception.commentexception.CommentException;
+import com.sparta.duopleaseduo.exception.commentexception.CommentLikeExcecption;
+import com.sparta.duopleaseduo.exception.commentexception.NoSuchCommentException;
+import com.sparta.duopleaseduo.exception.commentexception.NoSuchLikedHistory;
+import com.sparta.duopleaseduo.exception.userexception.NoSuchUserException;
+import com.sparta.duopleaseduo.exception.userexception.UserException;
 import com.sparta.duopleaseduo.repository.CommentLikeRepository;
 import com.sparta.duopleaseduo.repository.CommentRepository;
 import com.sparta.duopleaseduo.repository.UserRepository;
@@ -23,14 +29,13 @@ public class CommentlikeTest {
     private  CommentRepository commentRepository;
     @Autowired
     private  UserRepository userRepository;
-    HttpServletRequest request;
 
     @Test
     @DisplayName("1차 캐시 : comment like 저장")
     @Rollback(value = false)
-    void Test1(){
-        User user = userRepository.findById(1L).orElseThrow();// 테스트
-        Comment comment = commentRepository.findById(1L).orElseThrow(()-> new NoSuchElementException("해당 댓글은 없습니다"));
+    void Test1() throws UserException, CommentException {
+        User user = userRepository.findById(1L).orElseThrow(NoSuchUserException::new);// 테스트
+        Comment comment = commentRepository.findById(1L).orElseThrow(NoSuchCommentException::new);
         if(commentLikeRepository.existsByUserAndComment(user,comment)){
             throw new IllegalStateException("해당 댓글은 이미 좋아요 하셨습니다");
         }
@@ -38,21 +43,21 @@ public class CommentlikeTest {
             CommentLike commentLike = new CommentLike(user,comment);
             commentLikeRepository.save(commentLike);
         }catch (Exception e){
-            throw new NullPointerException("댓글 좋아요 하는데 문제가 생김");
+            throw new CommentLikeExcecption();
         }
         //return true;
     }
     @Test
     @DisplayName("2차 캐시 : comment like 제거")
     @Rollback(value = false)
-    void Test2(){
-        User user = userRepository.findById(1L).orElseThrow();// 테스트
-        Comment comment = commentRepository.findById(1L).orElseThrow(()-> new NoSuchElementException("해당 댓글은 없습니다"));
+    void Test2() throws UserException, CommentException {
+        User user = userRepository.findById(1L).orElseThrow(NoSuchUserException::new);// 테스트
+        Comment comment = commentRepository.findById(2L).orElseThrow(NoSuchCommentException::new);
         CommentLike commentLike;
         try{
             commentLike = commentLikeRepository.findByUserAndComment(user,comment);
         }catch (Exception e){
-            throw new NoSuchElementException("해당 댓글에 like 한적이 없습니다");
+            throw new NoSuchLikedHistory();
         }
         commentLikeRepository.delete(commentLike);
         //return true;

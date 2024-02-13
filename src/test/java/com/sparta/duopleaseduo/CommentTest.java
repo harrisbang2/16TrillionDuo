@@ -6,6 +6,7 @@ import com.sparta.duopleaseduo.exception.commentexception.CommentException;
 import com.sparta.duopleaseduo.exception.commentexception.CommentUpdateFailException;
 import com.sparta.duopleaseduo.exception.commentexception.IncorrectUserException;
 import com.sparta.duopleaseduo.exception.userexception.NoSuchUserException;
+import com.sparta.duopleaseduo.exception.userexception.UserException;
 import com.sparta.duopleaseduo.service.CommentService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.DisplayName;
@@ -38,7 +39,7 @@ public class CommentTest {
     @Test
     @DisplayName("2차 캐시 : comment 변경")
     @Rollback(value = false)
-    void updateComment() throws CommentException, NoSuchUserException {
+    void updateComment() throws CommentException, UserException {
         CommentRequestDto requestDto = new CommentRequestDto ();
         requestDto.setComment("2차 캐시 : comment 변경");
         service.updateComment(1L,requestDto,request);
@@ -47,7 +48,7 @@ public class CommentTest {
     @Test
     @DisplayName("3차 캐시 : comment 삭제")
     @Rollback(value = false)
-    void deleteComment() throws NoSuchUserException, CommentException {
+    void deleteComment() throws UserException, CommentException {
         service.deleteComment(1L,request);
     }
     ////////////////////////////////////////////////////////////////////////////////
@@ -67,7 +68,7 @@ public class CommentTest {
     @Test
     @DisplayName("2차 캐시 : comment 변경")
     @Rollback(value = false)
-    void updateCommentFail() throws CommentException, NoSuchUserException {
+    void updateCommentFail() throws CommentException, UserException {
         CommentRequestDto requestDto = new CommentRequestDto ();
         requestDto.setComment("2차 캐시 : comment 변경");
         service.updateComment(3100L,requestDto,request);
@@ -76,7 +77,7 @@ public class CommentTest {
     @Test
     @DisplayName("3차 캐시 : comment 삭제")
     @Rollback(value = false)
-    void deleteCommentFail() throws NoSuchUserException, CommentException {
+    void deleteCommentFail() throws UserException, CommentException {
         service.deleteComment(900L,request);
     }
 
