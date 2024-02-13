@@ -42,7 +42,7 @@ public class CommentService {
             comment = new Comment(requestDto, user, feed); // user feed 추가 예정
             savecomment = commentRepository.save(comment);
         }catch (Exception e){
-             throw new RuntimeException("저장에 오류사 생겼습니다.");
+             throw new RuntimeException("저장에 오류가 생겼습니다.");
         }
         // DB 저장
         // Entity -> ResponseDto

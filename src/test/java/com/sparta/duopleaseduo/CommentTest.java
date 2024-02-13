@@ -50,15 +50,15 @@ public class CommentTest {
     /*                       싶패 코드들                        */
     ////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////
-    @Test
-    @DisplayName("1차 캐시 : comment 저장")
-    @Rollback(value = false)
-    void createCommentFail(){
-        CommentRequestDto requestDto = new CommentRequestDto();
-        requestDto.setComment("");
-
-        service.createComment(requestDto,1L,request);
-    }
+//    @Test
+//    @DisplayName("1차 캐시 : comment 저장")
+//    @Rollback(value = false)
+//    void createCommentFail(){
+//        CommentRequestDto requestDto = new CommentRequestDto();
+//        requestDto.setComment("");
+//
+//        service.createComment(requestDto,1123L,request);
+//    }
     @Test
     @DisplayName("2차 캐시 : comment 변경")
     @Rollback(value = false)

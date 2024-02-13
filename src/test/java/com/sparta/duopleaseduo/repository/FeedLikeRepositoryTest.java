@@ -35,7 +35,7 @@ class FeedLikeRepositoryTest {
             throw new IllegalStateException("중복 아이디가 있습니다.");
         }
 
-        boolean feedLikeCheck = feedLikeRepository.existsByFeedAndUser(feed, user);
+        boolean feedLikeCheck = feedLikeRepository.existsByUserAndFeed(user, feed);
         System.out.println("데이터 : " + feedLikeCheck);
 
         feedLikeRepository.save(new FeedLike(user, feed));
