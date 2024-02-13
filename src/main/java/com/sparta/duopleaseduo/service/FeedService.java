@@ -6,8 +6,11 @@ import com.sparta.duopleaseduo.entity.Feed;
 import com.sparta.duopleaseduo.entity.FeedLike;
 import com.sparta.duopleaseduo.entity.RiotUser;
 import com.sparta.duopleaseduo.entity.User;
+import com.sparta.duopleaseduo.exception.feed.AlreadyLikedException;
+import com.sparta.duopleaseduo.exception.feed.UserNotMatchException;
 import com.sparta.duopleaseduo.jwt.JwtUtil;
 import com.sparta.duopleaseduo.repository.*;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,7 +32,7 @@ public class FeedService {
     @Transactional(readOnly = true)
     public UserFeedListResponseDto getUserFeedList(Long id, HttpServletRequest request) {
         User user = userRepository.findById(id).orElseThrow(
-                () -> new IllegalStateException("해당 유저를 찾지 못했습니다."));
+                () -> new EntityNotFoundException("해당 유저를 찾지 못했습니다."));
 
         List<FeedListDto> feedList = feedRepository.findAllByUser(user)
                 .stream()
@@ -106,7 +109,7 @@ public class FeedService {
         Feed feed = getFeed(id);
 
         FeedLike feedLike = feedLikeRepository.findByUserAndFeed(user, feed).orElseThrow(
-                () -> new IllegalStateException("해당 글에 좋아요를 누르지 않았습니다.")
+                () -> new EntityNotFoundException("해당 글에 좋아요를 누르지 않았습니다.")
         );
 
         feedLikeRepository.delete(feedLike);
@@ -114,23 +117,24 @@ public class FeedService {
 
     private Feed getFeed(Long id) {
         return feedRepository.findById(id).orElseThrow(
-                () -> new IllegalStateException("해당 피드를 찾지 못했습니다."));
+                () -> new EntityNotFoundException("해당 피드를 찾지 못했습니다."));
     }
 
     private User getUser(String email) {
         return userRepository.findByEmail(email).orElseThrow(()
-                -> new IllegalStateException("해당 유저를 찾을 수 없습니다."));
+                -> new EntityNotFoundException("해당 유저를 찾지 못했습니다."));
+
     }
 
     private void validateUser(User user, Feed feed, String message) {
         if (feed.isUserMatch(user)) {
-            throw new IllegalStateException(message);
+            throw new UserNotMatchException(message);
         }
     }
 
     private void validateLike(User user, Feed feed) {
         if (feedLikeRepository.existsByUserAndFeed(user, feed)) {
-            throw new IllegalStateException("좋아요는 한 번만 누를 수 있습니다.");
+            throw new AlreadyLikedException("좋아요는 한 번만 누를 수 있습니다.");
         }
     }
 
