@@ -1,5 +1,6 @@
 package com.sparta.duopleaseduo.dto.request;
 
+import com.sparta.duopleaseduo.entity.Feed;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
@@ -11,4 +12,9 @@ public class FeedFormDto {
     private String contents;
     @NotBlank(message = "소환사명을 적어주세요.")
     private String summonerName;
+
+    public FeedFormDto(Feed feed) {
+        this.title = feed.getTitle();
+        this.contents = feed.getContent();
+    }
 }

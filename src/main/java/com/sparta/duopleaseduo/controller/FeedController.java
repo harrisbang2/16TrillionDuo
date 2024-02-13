@@ -72,13 +72,13 @@ public class FeedController {
     public ResponseEntity<String> likeFeed(@PathVariable Long id, HttpServletRequest request) {
         feedService.likeFeed(id, request);
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("");
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/like/{id}")
     public ResponseEntity<String> cancelLikeFeed(@PathVariable Long id, HttpServletRequest request){
         feedService.cancelLikeFeed(id, request);
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("");
+        return ResponseEntity.noContent().build();
     }
 }
