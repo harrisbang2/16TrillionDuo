@@ -3,10 +3,12 @@ package com.sparta.duopleaseduo.entity;
 import com.sparta.duopleaseduo.dto.response.RiotUserResponseDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 @Table(name = "riotusers")
 public class RiotUser {
 

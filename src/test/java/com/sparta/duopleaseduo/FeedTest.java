@@ -140,7 +140,7 @@ class FeedTest {
 
         List<FeedListDto> userFeeds = feedRepository.findAllByUser(user).stream().map(FeedListDto::new).toList();
 
-        UserFeedListResponseDto feedListDto = new UserFeedListResponseDto(user.getUsername(), user.getIntroduce(), userFeeds);
+        UserFeedListResponseDto feedListDto = new UserFeedListResponseDto(user, userFeeds);
 
         System.out.println(feedListDto);
     }

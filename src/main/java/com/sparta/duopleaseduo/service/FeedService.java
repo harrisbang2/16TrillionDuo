@@ -28,7 +28,6 @@ public class FeedService {
 
     @Transactional(readOnly = true)
     public UserFeedListResponseDto getUserFeedList(Long id, HttpServletRequest request) {
-        String email = jwtUtil.validateTokenAndGetUserName(request);
         User user = userRepository.findById(id).orElseThrow(
                 () -> new IllegalStateException("해당 유저를 찾지 못했습니다."));
 
@@ -37,7 +36,7 @@ public class FeedService {
                 .map(FeedListDto::new)
                 .toList();
 
-        return new UserFeedListResponseDto(user.getUsername(), user.getIntroduce(), feedList);
+        return new UserFeedListResponseDto(user, feedList);
     }
 
     @Transactional(readOnly = true)
@@ -53,14 +52,7 @@ public class FeedService {
                 .map(CommentResponseDto::new).toList();
         int count = feedLikeRepository.countByFeed(feed);
 
-        return new FeedDetailResponseDto(
-                feed.getUser().getUsername(),
-                feed.getTitle(),
-                feed.getContent(),
-                count,
-                feed.getCreateAt(),
-                comments
-        );
+        return new FeedDetailResponseDto(feed, count, comments);
     }
 
     public Long createFeed(FeedFormDto feedFormDto, RiotUserResponseDto riotUserInfo, HttpServletRequest request) {

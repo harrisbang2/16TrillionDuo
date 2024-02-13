@@ -48,7 +48,7 @@ public class FeedController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserFeedListResponseDto> getFeedList(@PathVariable Long id, HttpServletRequest request) {
+    public ResponseEntity<UserFeedListResponseDto> getUserFeedList(@PathVariable Long id, HttpServletRequest request) {
         UserFeedListResponseDto feedListDto = feedService.getUserFeedList(id, request);
 
         return ResponseEntity.ok(feedListDto);
@@ -61,7 +61,7 @@ public class FeedController {
         return ResponseEntity.ok(feedList);
     }
 
-    @GetMapping("/comment/{id}")
+    @GetMapping("/details/{id}")
     public ResponseEntity<FeedDetailResponseDto> getFeedDetail(@PathVariable Long id) {
         FeedDetailResponseDto feedDetailResponseDto = feedService.getFeedDetail(id);
 
