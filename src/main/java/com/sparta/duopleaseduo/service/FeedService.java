@@ -6,9 +6,10 @@ import com.sparta.duopleaseduo.entity.Feed;
 import com.sparta.duopleaseduo.entity.FeedLike;
 import com.sparta.duopleaseduo.entity.RiotUser;
 import com.sparta.duopleaseduo.entity.User;
-import com.sparta.duopleaseduo.exception.feed.EntityNotFoundException;
+import com.sparta.duopleaseduo.exception.feed.UserMatchException;
 import com.sparta.duopleaseduo.jwt.JwtUtil;
 import com.sparta.duopleaseduo.repository.*;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -128,12 +129,12 @@ public class FeedService {
 
     private User getUser(String email) {
         return userRepository.findByEmail(email).orElseThrow(()
-                -> new EntityNotFoundException("해당 유저를 찾을 수 없습니다."));
+                -> new EntityNotFoundException("해당 유저를 찾지 못했습니다."));
     }
 
     private void validateUser(User user, Feed feed, String message) {
         if (feed.isUserMatch(user)) {
-            throw new IllegalStateException(message);
+            throw new UserMatchException(message);
         }
     }
 
