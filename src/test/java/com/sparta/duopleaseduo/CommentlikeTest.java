@@ -9,6 +9,7 @@ import com.sparta.duopleaseduo.exception.commentexception.NoSuchCommentException
 import com.sparta.duopleaseduo.exception.commentexception.NoSuchLikedHistory;
 import com.sparta.duopleaseduo.exception.userexception.NoSuchUserException;
 import com.sparta.duopleaseduo.exception.userexception.UserException;
+import com.sparta.duopleaseduo.exception.userexception.YesSuchException;
 import com.sparta.duopleaseduo.repository.CommentLikeRepository;
 import com.sparta.duopleaseduo.repository.CommentRepository;
 import com.sparta.duopleaseduo.repository.UserRepository;
@@ -37,7 +38,7 @@ public class CommentlikeTest {
         User user = userRepository.findById(1L).orElseThrow(NoSuchUserException::new);// 테스트
         Comment comment = commentRepository.findById(1L).orElseThrow(NoSuchCommentException::new);
         if(commentLikeRepository.existsByUserAndComment(user,comment)){
-            throw new IllegalStateException("해당 댓글은 이미 좋아요 하셨습니다");
+            throw new CommentLikeExcecption();
         }
         try{
             CommentLike commentLike = new CommentLike(user,comment);
@@ -52,7 +53,7 @@ public class CommentlikeTest {
     @Rollback(value = false)
     void Test2() throws UserException, CommentException {
         User user = userRepository.findById(1L).orElseThrow(NoSuchUserException::new);// 테스트
-        Comment comment = commentRepository.findById(2L).orElseThrow(NoSuchCommentException::new);
+        Comment comment = commentRepository.findById(1L).orElseThrow(NoSuchCommentException::new);
         CommentLike commentLike;
         try{
             commentLike = commentLikeRepository.findByUserAndComment(user,comment);

@@ -35,11 +35,9 @@ public class CommentService {
     public CommentResponseDto createComment(CommentRequestDto requestDto,Long id,HttpServletRequest request) throws CommentCreateErrorException { /// 유저랑 Feed 추가할 예정
         Comment comment;
         Comment savecomment;
-        //System.out.println(jwtUtil.validateTokenAndGetUserName(request));
         try {
             // !!!!!!!!!!!!!!!!!! 테스트 를 위해 한 주석입니다.
-            //User user = userRepository.findByEmail(jwtUtil.validateTokenAndGetUserName(request)).orElseThrow(() -> new NoSuchElementException("회원이 아닙니다."));
-             User user = userRepository.findById(1L).orElseThrow(()->new NoSuchElementException("그런 유저 없어요"));
+             User user = userRepository.findByEmail(jwtUtil.validateTokenAndGetUserName(request)).orElseThrow(NoSuchUserException::new);
              Feed feed = feedRepository.findById(id).orElseThrow(()->new NoSuchElementException("그런 feed 없어요"));
             //
             comment = new Comment(requestDto, user, feed); // user feed 추가 예정
@@ -55,15 +53,13 @@ public class CommentService {
 
 
 ///// 수정
-    public CommentResponseDto updateComment(Long id, CommentRequestDto requestDto, HttpServletRequest request) throws CommentException, UserException {  /// 유저랑 Feed 추가할 예정 (User user , Feed feed)
+    public CommentResponseDto updateComment(Long id, CommentRequestDto requestDto, HttpServletRequest request) throws CommentException, UserException {
         //  DB에 존재하는지 확인
         // 유저 확인.
         Comment comment;
         User user;
             comment = findComment(id);
-            // !!!!!!!!!!!!!!!!!! 테스트 를 위해 한 주석입니다. !!!!!!!!!!
-            //user = userRepository.findByEmail(jwtUtil.validateTokenAndGetUserName(request)).orElseThrow(() -> new NoSuchElementException("회원이 아닙니다."));
-            user = userRepository.findById(1L).orElseThrow(NoSuchUserException::new);
+            user = userRepository.findByEmail(jwtUtil.validateTokenAndGetUserName(request)).orElseThrow(NoSuchUserException::new);
         // 유저 검사
         // Feed 검사도 할가 했지만 뺏습니다 시간 지연을 최소한 으로 하기 위해서 그냥 comment id 랑 user id 로 했습니다
         if(!comment.getUser().getId().equals(user.getId())){
@@ -86,7 +82,7 @@ public class CommentService {
         User user;
         //
             comment = findComment(id);
-            user = userRepository.findById(1L).orElseThrow(NoSuchUserException::new);
+            user = userRepository.findByEmail(jwtUtil.validateTokenAndGetUserName(request)).orElseThrow(NoSuchUserException::new);
         // 유저 확인.
         // Feed 검사도 할가 했지만 뺏습니다 시간 지연을 최소한 으로 하기 위해서 그냥 comment id 랑 user id 로 했습니다
         if(!comment.getUser().getId().equals(user.getId())){
