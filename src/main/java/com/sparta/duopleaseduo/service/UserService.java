@@ -42,6 +42,7 @@ public class UserService {
 
     @Transactional
     public UserResponseDto signUp(SignUpRequestDto requestDto) {
+        log.info("signUp Service");
         Optional<User> user = userRepository.findByEmail(requestDto.getEmail());
         if(user.isPresent()) {
             log.info("회원 이메일 중복");
@@ -54,23 +55,17 @@ public class UserService {
 
 
     public UserResponseDto login(LoginRequestDto requestDto, HttpServletResponse response) {
-        User findUser = userRepository.findByEmail(requestDto.getEmail()).orElseThrow(
-                () -> new IncorrectPasswordException()
-        );
-        if(!passwordEncoder().matches(requestDto.getPassword(), findUser.getPassword())) {
-            log.info("비밀번호 불일치");
-            throw new IncorrectPasswordException();
-        }
+        log.info("login Service");
+        User findUser = findUserByEmail(requestDto.getEmail());
+        checkPassword(requestDto.getPassword(), findUser);
         log.info("로그인 성공");
         jwtUtil.setTokenInCookie(requestDto.getEmail(), response);
         return new UserResponseDto(findUser);
     }
 
     public UserResponseDto logout(HttpServletRequest request, HttpServletResponse response) {
-        String userEmail = jwtUtil.validateTokenAndGetUserName(request);
-        User findUser = userRepository.findByEmail(userEmail).orElseThrow(
-                () -> new NoSuchUserException()
-        );
+        log.info("logout Service");
+        User findUser = findUserByEmail(jwtUtil.validateTokenAndGetUserName(request));
         jwtUtil.expireToken(response);
         log.info("로그아웃 성공");
         return new UserResponseDto(findUser);
@@ -78,30 +73,42 @@ public class UserService {
 
     @Transactional
     public UserResponseDto updateUser(UpdateUserRequestDto requestDto, HttpServletRequest request) {
-        String userEmail = jwtUtil.validateTokenAndGetUserName(request);
-        User findUser = userRepository.findByEmail(userEmail).orElseThrow(
-                () -> new NoSuchUserException()
-        );
-        if(!passwordEncoder().matches(requestDto.getPassword(), findUser.getPassword())) {
-            throw new IncorrectPasswordException();
-        };
+        log.info("updateUser Service");
+        User findUser = validateUser(requestDto.getPassword(), request);
         findUser.update(requestDto);
+        log.info("유저정보 업데이트 서비스로직 성공");
         return new UserResponseDto(findUser);
     }
-
 
     @Transactional
     public UserResponseDto updatePassword(UpdatePasswordRequestDto requestDto, HttpServletRequest request) {
-        String userEmail = jwtUtil.validateTokenAndGetUserName(request);
-        User findUser = userRepository.findByEmail(userEmail).orElseThrow(
-                () -> new NoSuchUserException()
-        );
-        if (!passwordEncoder().matches(requestDto.getPassword(), findUser.getPassword())) {
-            throw new IncorrectPasswordException();
-        }
+        log.info("updatePassword Service");
+        User findUser = validateUser(requestDto.getPassword(), request);
         findUser.updatePassword(requestDto);
+        log.info("비밀번호 수정 서비스로직 성공");
         return new UserResponseDto(findUser);
     }
 
+    private User validateUser(String InputPassword, HttpServletRequest request) {
+        String userEmail = jwtUtil.validateTokenAndGetUserName(request);
+        User findUser = findUserByEmail(userEmail);
+        checkPassword(InputPassword, findUser);
+        return findUser;
+    }
 
+    private User findUserByEmail(String userEmail) {
+        log.info("이메일로 유저 검색");
+        User findUser = userRepository.findByEmail(userEmail).orElseThrow(
+                () -> new NoSuchUserException()
+        );
+        return findUser;
+    }
+
+    private void checkPassword(String InputPassword, User findUser) {
+        log.info("비밀번호 검증 로직 실행");
+        if(!passwordEncoder().matches(InputPassword, findUser.getPassword())) {
+            log.info("비밀번호 불일치");
+            throw new IncorrectPasswordException();
+        };
+    }
 }
