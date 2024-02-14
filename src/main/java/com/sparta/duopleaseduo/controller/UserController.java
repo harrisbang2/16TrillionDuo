@@ -33,33 +33,34 @@ public class UserController {
     private final JwtUtil jwtUtil;
 
     @PostMapping
-    public ResponseEntity<?> signUp(@Valid @RequestBody SignUpRequestDto requestDto, BindingResult bindingResult) {
+    public ResponseEntity<?> signUp(@Valid @RequestBody SignUpRequestDto requestDto, 
+                                    BindingResult bindingResult) {
         log.info("signUp Controller");
-        if(bindingResult.hasErrors()) {
-            log.info("회원가입 입력 검증오류 발생");
-            return ResponseEntity.badRequest()
-                    .body(createErrorMessages(bindingResult));
-        }
+        ResponseEntity<List<String>> bindingResultList = checkBindingResult(bindingResult);
+        if (bindingResultList != null) return bindingResultList;
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(userService.signUp(requestDto));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserResponseDto> login(@RequestBody LoginRequestDto requestDto, HttpServletResponse response) {
+    public ResponseEntity<UserResponseDto> login(@RequestBody LoginRequestDto requestDto, 
+                                                 HttpServletResponse response) {
         log.info("login Controller");
         return ResponseEntity.status(HttpStatus.OK)
                 .body(userService.login(requestDto, response));
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<UserResponseDto> logout(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<UserResponseDto> logout(HttpServletRequest request, 
+                                                  HttpServletResponse response) {
         log.info("logout Controller");
         return ResponseEntity.status(HttpStatus.OK)
                 .body(userService.logout(request, response));
     }
 
     @PatchMapping()
-    public ResponseEntity<UserResponseDto> updateUser(@RequestBody UpdateUserRequestDto requestDto, HttpServletRequest request) {
+    public ResponseEntity<UserResponseDto> updateUser(@RequestBody UpdateUserRequestDto requestDto, 
+                                                      HttpServletRequest request) {
         log.info("updateUser Controller");
         return ResponseEntity.status(HttpStatus.OK)
                 .body(userService.updateUser(requestDto, request));
@@ -70,13 +71,20 @@ public class UserController {
                                                           HttpServletRequest request,
                                                           BindingResult bindingResult) {
         log.info("updatePassword Controller");
+        ResponseEntity<List<String>> bindingResultList = checkBindingResult(bindingResult);
+        if (bindingResultList != null) return bindingResultList;
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(userService.updatePassword(requestDto, request));
+    }
+
+    public ResponseEntity<List<String>> checkBindingResult(BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
-            log.info("비밀번호 검증오류 발생");
+            log.info("입력 검증 오류 발생");
             return ResponseEntity.badRequest()
                     .body(createErrorMessages(bindingResult));
         }
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(userService.updatePassword(requestDto, request));
+        return null;
     }
 
     private List<String> createErrorMessages(BindingResult bindingResult) {

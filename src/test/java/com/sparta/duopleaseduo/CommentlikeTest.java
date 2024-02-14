@@ -9,7 +9,6 @@ import com.sparta.duopleaseduo.exception.commentexception.NoSuchCommentException
 import com.sparta.duopleaseduo.exception.commentexception.NoSuchLikedHistory;
 import com.sparta.duopleaseduo.exception.userexception.NoSuchUserException;
 import com.sparta.duopleaseduo.exception.userexception.UserException;
-import com.sparta.duopleaseduo.exception.userexception.YesSuchException;
 import com.sparta.duopleaseduo.repository.CommentLikeRepository;
 import com.sparta.duopleaseduo.repository.CommentRepository;
 import com.sparta.duopleaseduo.repository.UserRepository;
