@@ -6,6 +6,10 @@ import com.sparta.duopleaseduo.exception.feed.UserNotMatchException;
 import com.sparta.duopleaseduo.exception.userexception.IncorrectPasswordException;
 import com.sparta.duopleaseduo.exception.userexception.NoSuchUserException;
 import com.sparta.duopleaseduo.exception.userexception.UserAlreadyExistsException;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,6 +47,17 @@ public class ExceptionController {
     public ResponseEntity<ExceptionDto> userNotMatchExceptionHandler(UserAlreadyExistsException e){
         return createResponse(HttpStatus.BAD_REQUEST, e.getMessage());
     }
+
+    @ExceptionHandler({
+            ExpiredJwtException.class,
+            UnsupportedJwtException.class,
+            MalformedJwtException.class,
+            SignatureException.class,
+            IllegalArgumentException.class})
+    public ResponseEntity<ExceptionDto> jwtTokenExceptionHandler(RuntimeException e){
+        return createResponse(HttpStatus.FORBIDDEN,  e.getMessage());
+    }
+
 
     private ResponseEntity<ExceptionDto> createResponse(HttpStatus status, String message){
         return ResponseEntity.status(status.value())

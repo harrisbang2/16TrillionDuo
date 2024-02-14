@@ -3,8 +3,10 @@ package com.sparta.duopleaseduo.dto.request;
 import com.sparta.duopleaseduo.entity.Feed;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class FeedFormDto {
     @NotBlank(message = "제목을 적어주세요.")
     private String title;
