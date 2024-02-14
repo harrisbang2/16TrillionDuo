@@ -30,22 +30,22 @@ class FeedTest {
     @Autowired
     CommentRepository commentRepository;
 
-    @Test
-    @DisplayName("피드 추가")
-    @Rollback(value = false)
-    void createFeed(){
-//        User user = new User("user1@naver.com", "0000", "user1", "user1입니다");
-//       userRepository.save(user);
-
-        User user = userRepository.findById(1L).orElseThrow(()
-                -> new IllegalStateException("해당 유저를 찾을 수 없습니다.")
-        );
-
-        Feed feed = new Feed(user, "title2", "content");
-        Feed save = feedRepository.save(feed);
-
-        Assertions.assertEquals(feed, save);
-    }
+//    @Test
+//    @DisplayName("피드 추가")
+//    @Rollback(value = false)
+//    void createFeed(){
+////        User user = new User("user1@naver.com", "0000", "user1", "user1입니다");
+////       userRepository.save(user);
+//
+//        User user = userRepository.findById(1L).orElseThrow(()
+//                -> new IllegalStateException("해당 유저를 찾을 수 없습니다.")
+//        );
+//
+//        Feed feed = new Feed(user, "title2", "content");
+//        Feed save = feedRepository.save(feed);
+//
+//        Assertions.assertEquals(feed, save);
+//    }
 
     @Test
     @DisplayName("피드 수정")

@@ -4,12 +4,17 @@ import com.sparta.duopleaseduo.dto.request.LoginRequestDto;
 import com.sparta.duopleaseduo.dto.request.SignUpRequestDto;
 import com.sparta.duopleaseduo.dto.response.UserResponseDto;
 import com.sparta.duopleaseduo.entity.User;
+import com.sparta.duopleaseduo.exception.userexception.IncorrectPasswordException;
+import com.sparta.duopleaseduo.exception.userexception.UserAlreadyExistsException;
 import com.sparta.duopleaseduo.repository.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,10 +23,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @Transactional
 class UserServiceTest {
+
 
     @Autowired UserService userService;
     @Autowired UserRepository userRepository;
@@ -37,7 +44,6 @@ class UserServiceTest {
                 passwordEncoder().encode("password"),
                 "name","introduce"));
     }
-
 
     @DisplayName("회원가입")
     @Nested
@@ -67,38 +73,42 @@ class UserServiceTest {
             requestDto.setUsername("testName");
             //when
             //then
-            assertThrows(IllegalArgumentException.class, () ->
+            assertThrows(UserAlreadyExistsException.class, () ->
                     userService.signUp(requestDto));
         }
     }
 
-//    @DisplayName("로그인")
-//    @Nested
-//    class login {
-//        @Test
-//        @DisplayName("로그인 성공")
-//        void login_success() {
-//            //given
-//            LoginRequestDto requestDto = new LoginRequestDto();
-//            requestDto.setEmail("test@email.com");
-//            requestDto.setPassword("password");
-//            //when
-//            UserResponseDto responseDto = userService.login(requestDto);
-//            //then
-//            assertThat(responseDto.getId()).isEqualTo(user.getId());
-//        }
-//
-//        @Test
-//        @DisplayName("로그인 실패_비밀번호 틀림")
-//        void login_fail_wrongPassword() {
-//            //given
-//            LoginRequestDto requestDto = new LoginRequestDto();
-//            requestDto.setEmail("test@email.com");
-//            requestDto.setPassword("wrongPassword");
-//            //when
-//            //then
-//            assertThrows(IllegalArgumentException.class,
-//                    () -> userService.login(requestDto));
-//        }
-//    }
+    @DisplayName("로그인")
+    @Nested
+    class login {
+        @Test
+        @DisplayName("로그인 성공")
+        void login_success() {
+            //given
+            LoginRequestDto requestDto = new LoginRequestDto();
+            requestDto.setEmail("test@email.com");
+            requestDto.setPassword("password");
+            //when
+            HttpServletResponse response = Mockito.mock(HttpServletResponse.class);
+            UserResponseDto responseDto = userService.login(requestDto, response);
+            //then
+            assertThat(responseDto.getId()).isEqualTo(user.getId());
+        }
+
+        @Test
+        @DisplayName("로그인 실패_비밀번호 틀림")
+        void login_fail_wrongPassword() {
+            //given
+            LoginRequestDto requestDto = new LoginRequestDto();
+            requestDto.setEmail("test@email.com");
+            requestDto.setPassword("wrongPassword");
+            //when
+            //then
+            HttpServletResponse response = Mockito.mock(HttpServletResponse.class);
+            assertThrows(IncorrectPasswordException.class,
+                    () -> userService.login(requestDto, response));
+        }
+    }
+
+
 }
