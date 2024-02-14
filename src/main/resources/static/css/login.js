@@ -34,12 +34,13 @@ function signUp(){
     let username= document.getElementById("signUpName").value;
     let email= document.getElementById("signUpEmail").value;
     let password = document.getElementById("signUpPassword").value;
+    let introduce = document.getElementById("signUpIntroduce").value;
     alert(email + password + username)
     $.ajax({
         type: "POST",
         url: `/users`,
         contentType: "application/json",
-        data: JSON.stringify({email: email, password: password, username: username, introduce: "introduce_temp"})
+        data: JSON.stringify({email: email, password: password, username: username, introduce: introduce})
     })
         .done(function (res, status, xhr) {
             alert("아이디 생성 성공")
