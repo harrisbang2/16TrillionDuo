@@ -61,6 +61,7 @@ public class CommentController {
     // deleting the item.
     @DeleteMapping("/{commentId}")
     public ResponseEntity<?> deleteComment(@PathVariable(name = "commentId") Long id,HttpServletRequest request) throws UserException, CommentException {
+        log.info("댓글 삭제 오류");
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(commentService.deleteComment(id,request));
     }
@@ -76,12 +77,14 @@ public class CommentController {
     // comment like
     @PostMapping("/like/{commentId}")
     private ResponseEntity<?> addLike(@PathVariable(name ="commentId") Long commentId,HttpServletRequest request) throws UserException, CommentException {
+        log.info("댓글 좋아요");
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(likeService.createComment(commentId,request));
     }
 
     @DeleteMapping("/like/{commentId}")
     private ResponseEntity<?> deleteLike(@PathVariable(name ="commentId") Long commentId,HttpServletRequest request) throws UserException, CommentException {
+        log.info("댓글 좋아요 취소");
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(likeService.deleteComment(commentId,request));
     }
