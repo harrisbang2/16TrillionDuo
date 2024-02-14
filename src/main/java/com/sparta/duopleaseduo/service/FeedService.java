@@ -13,6 +13,7 @@ import com.sparta.duopleaseduo.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 @Transactional
 public class FeedService {
     private final FeedRepository feedRepository;
@@ -38,7 +40,7 @@ public class FeedService {
                 .stream()
                 .map(FeedListDto::new)
                 .toList();
-
+        ;
         return new UserFeedListResponseDto(user, feedList);
     }
 
@@ -63,6 +65,8 @@ public class FeedService {
         RiotUser savedRiotUser = riotUserRepository.save(new RiotUser(riotUserInfo));
         User user = getUser(email);
         Feed feed = new Feed(user, feedFormDto.getTitle(), feedFormDto.getContents(), savedRiotUser);
+
+        log.info("글작성 성공");
         feedRepository.save(feed);
 
         return feed.getId();
@@ -88,6 +92,7 @@ public class FeedService {
 
         validateUser(user, feed, "피드를 삭제할 수 없습니다.");
 
+        log.info("삭제 성공");
         feedRepository.delete(feed);
     }
 
@@ -128,12 +133,14 @@ public class FeedService {
 
     private void validateUser(User user, Feed feed, String message) {
         if (feed.isUserMatch(user)) {
+            log.info(message);
             throw new UserNotMatchException(message);
         }
     }
 
     private void validateLike(User user, Feed feed) {
         if (feedLikeRepository.existsByUserAndFeed(user, feed)) {
+            log.info("좋아요는 한 번만 가능합니다.");
             throw new AlreadyLikedException("좋아요는 한 번만 누를 수 있습니다.");
         }
     }
