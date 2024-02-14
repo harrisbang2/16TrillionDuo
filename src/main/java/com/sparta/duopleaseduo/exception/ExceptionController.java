@@ -55,7 +55,7 @@ public class ExceptionController {
             SignatureException.class,
             IllegalArgumentException.class})
     public ResponseEntity<ExceptionDto> jwtTokenExceptionHandler(RuntimeException e){
-        return createResponse(HttpStatus.BAD_REQUEST,  e.getMessage());
+        return createResponse(HttpStatus.FORBIDDEN,  e.getMessage());
     }
 
 
