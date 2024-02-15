@@ -68,7 +68,7 @@ public class CommentTest {
         // 유저 확인.
         Comment comment;
         User user;
-        comment = findComment(4L);
+        comment = findComment(1L);
         // !!!!!!!!!!!!!!!!!! 테스트 를 위해 한 주석입니다. !!!!!!!!!!
         //user = userRepository.findByEmail(jwtUtil.validateTokenAndGetUserName(request)).orElseThrow(() -> new NoSuchElementException("회원이 아닙니다."));
         user = userRepository.findById(1L).orElseThrow(NoSuchUserException::new);
@@ -93,7 +93,7 @@ public class CommentTest {
         Comment comment;
         User user;
         //
-        comment = findComment(4L);
+        comment = findComment(1L);
         user = userRepository.findById(1L).orElseThrow(NoSuchUserException::new);
         // 유저 확인.
         // Feed 검사도 할가 했지만 뺏습니다 시간 지연을 최소한 으로 하기 위해서 그냥 comment id 랑 user id 로 했습니다
