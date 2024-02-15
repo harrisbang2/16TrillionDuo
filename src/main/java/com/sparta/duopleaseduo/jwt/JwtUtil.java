@@ -105,9 +105,9 @@ public class JwtUtil {
             log.info("토큰 유효성 검사");
             if(validateToken(token)){
                 return getUserInfoFromToken(token).getSubject();
-            };
+            }
         }
-        throw new IllegalArgumentException("에러");
+        throw new IllegalArgumentException("로그인된 유저가 아닙니다.");
     }
 
     public HttpServletResponse expireToken(HttpServletResponse response) {

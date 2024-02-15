@@ -40,7 +40,6 @@ public class FeedService {
                 .stream()
                 .map(FeedListDto::new)
                 .toList();
-        ;
         return new UserFeedListResponseDto(user, feedList);
     }
 
@@ -132,7 +131,7 @@ public class FeedService {
     }
 
     private void validateUser(User user, Feed feed, String message) {
-        if (feed.isUserMatch(user)) {
+        if (!feed.isUserMatch(user)) {
             log.info(message);
             throw new UserNotMatchException(message);
         }

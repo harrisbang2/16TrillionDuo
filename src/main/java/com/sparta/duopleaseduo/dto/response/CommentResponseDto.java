@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class CommentResponseDto {
 
-    private Long id;
+    private String id;
     private String comment;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
@@ -19,7 +19,7 @@ public class CommentResponseDto {
 
 
     public CommentResponseDto(Comment savecomment) {
-        this.id = savecomment.getId();
+        this.id = savecomment.getUser().getUsername();
         this.comment = savecomment.getComment();
         this.createdAt = savecomment.getCreateAt();
         this.modifiedAt = savecomment.getUpdateAt();
